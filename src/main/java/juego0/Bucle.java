@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.*;
 
 public class Bucle extends JGame {
-
     private Date dInit = new Date(), dAhora;
     private Fondo fondo;
     private Vector<DisparoBasico> vector_DisparosBasicos = new Vector<>();

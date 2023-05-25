@@ -16,10 +16,8 @@ public class Arma {
     }
     public void disparar(double x, double y, Tipoarma t, Vector<DisparoBasico> disparos_p38) {
         if (t == Tipoarma.BASE) {
-            DisparoBasico disparo1 = new DisparoBasico(x+10,y-10,0,-15);
-            disparos_p38.add(disparo1);
-            DisparoBasico disparo2 = new DisparoBasico(x+40,y-10,0,-15);
-            disparos_p38.add(disparo2);
+            DisparoBasico disparo = new DisparoBasico(x,y,0,-25);
+            disparos_p38.add(disparo);
         } 
 
     }

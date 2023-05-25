@@ -6,7 +6,7 @@ import com.entropyinteractive.Keyboard;
 
 public class P38 extends ObjetoGrafico implements ObjetoMovible {
 
-    final private double NAVE_DESPLAZAMIENTO = 150.0;
+    final private double NAVE_DESPLAZAMIENTO = 250.0;
     private Arma arma = new Arma();
     private Vector<DisparoBasico> disparos_p38;
     private boolean interrumpirdisparo = false;
@@ -26,7 +26,7 @@ public class P38 extends ObjetoGrafico implements ObjetoMovible {
             this.setPosition((this.getX() + NAVE_DESPLAZAMIENTO * delta), this.getY());
         if (keyboard.isKeyPressed(KeyEvent.VK_X)) {
             if (!interrumpirdisparo) {
-                arma.disparar(this.getX(), this.getY(), arma.getTipoarma(), disparos_p38);
+                arma.disparar(this.getX()+(5), this.getY()-40, arma.getTipoarma(), disparos_p38);
                 interrumpirdisparo = true;
             }
         } else
