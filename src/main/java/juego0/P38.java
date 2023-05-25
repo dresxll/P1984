@@ -16,7 +16,6 @@ public class P38 extends ObjetoGrafico implements ObjetoMovible {
     }
 
     public void update(double delta, Keyboard keyboard) {
-        positionY-=0.5;
         if (keyboard.isKeyPressed(KeyEvent.VK_W))
             this.setPosition(this.getX(), (this.getY() - NAVE_DESPLAZAMIENTO * delta));
         if (keyboard.isKeyPressed(KeyEvent.VK_S))
@@ -28,7 +27,7 @@ public class P38 extends ObjetoGrafico implements ObjetoMovible {
         if (keyboard.isKeyPressed(KeyEvent.VK_X)) {
             if (!interrumpirdisparo) {
                 arma.disparar(this.getX(), this.getY(), arma.getTipoarma(), disparos_p38);
-                interrumpirdisparo = false;
+                interrumpirdisparo = true;
             }
         } else
             interrumpirdisparo = false;

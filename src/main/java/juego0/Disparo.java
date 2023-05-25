@@ -6,7 +6,8 @@ public abstract class Disparo extends ObjetoGrafico {
 
     private Point2D.Double delta = new Point2D.Double();
     private Point2D.Double origen = new Point2D.Double();
-    public Boolean fueraderango = false, libre = false;
+    public Boolean fueraderango = false;
+    protected double alcance;
 
     public Disparo(String filename, double x, double y, double deltax, double deltay) {
         super(filename);
@@ -34,6 +35,9 @@ public abstract class Disparo extends ObjetoGrafico {
 
     public Point2D.Double GetOrigen() {
         return this.origen;
+    }
+    public double getAlcance() {
+        return this.alcance;
     }
 
 }
