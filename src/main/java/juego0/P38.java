@@ -8,7 +8,7 @@ public class P38 extends ObjetoGrafico implements ObjetoMovible {
 
     final private double NAVE_DESPLAZAMIENTO = 250.0;
     private Arma arma = new Arma();
-    private Vector<DisparoBasico> disparos_p38;
+    private Vector<Disparo> disparos_p38;
     private boolean interrumpirdisparo = false;
 
     public P38(String filename) {
@@ -33,7 +33,7 @@ public class P38 extends ObjetoGrafico implements ObjetoMovible {
             interrumpirdisparo = false;
     }
 
-    public void setVector(Vector<DisparoBasico> disparos_p38) {
+    public void setVector(Vector<Disparo> disparos_p38) {
         this.disparos_p38 = disparos_p38;
     }
 }

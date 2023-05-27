@@ -9,8 +9,10 @@ import java.util.*;
 public class Bucle extends JGame {
     private Date dInit = new Date(), dAhora;
     private Fondo fondo;
-    private Vector<DisparoBasico> vector_DisparosBasicos = new Vector<>();
-    private Vector<DisparoBasico> vector_DisparosBasicosLibres = new Vector<>();
+    private Vector<Disparo> vectorDisparos = new Vector<>();
+    private Vector<Disparo> vectorDisparosLibres = new Vector<>();
+    private Vector<Enemigo> vectorEnemigos = new Vector<>();
+    private Vector<Enemigo> vectorEnemigosLibres = new Vector<>();
     private P38 p38 = new P38("images/1984/p38.png");
 
     public static void main(String[] args) {
@@ -31,6 +33,8 @@ public class Bucle extends JGame {
             fondo = new Fondo("images/1984/fondo.jpg");
             fondo.setPosition(9.5, -fondo.getHeight() + 610);
             p38.setPosition((fondo.getWidth() / 2) - 19.5, 500);
+            vectorEnemigos.add(new Enemigo("images/1984/enemigoPrueba.png"));
+            vectorEnemigos.get(0).setPosition(p38.getX(), p38.getY() - 400);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -47,8 +51,9 @@ public class Bucle extends JGame {
         }
         moverDisparos();
         limpieza();
+        colisionar();
         dAhora = new Date();
-        p38.setVector(vector_DisparosBasicos);
+        p38.setVector(vectorDisparos);
         fondo.setPosition(fondo.getX(), fondo.getY() + 0.5);
         p38.update(delta, keyboard);
     }
@@ -57,12 +62,16 @@ public class Bucle extends JGame {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         fondo.display(g);
         p38.display(g);
-        for (DisparoBasico disparo : vector_DisparosBasicos) {
-            if (!disparo.fueraderango) {
-                disparo.display(g);
-            } else
-                vector_DisparosBasicosLibres.add(disparo);
+        for (Enemigo enemigo : vectorEnemigos) {
+           if (!vectorEnemigosLibres.contains(enemigo))
+           enemigo.display(g); 
         }
+
+        for (Disparo disparo : vectorDisparos) {
+            if (!vectorDisparosLibres.contains(disparo))
+            disparo.display(g); 
+         }
+
         long dateDiff = dAhora.getTime() - dInit.getTime();
         long diffSeconds = dateDiff / 1000 % 60;
         long diffMinutes = dateDiff / (60 * 1000) % 60;
@@ -76,20 +85,36 @@ public class Bucle extends JGame {
     }
 
     private void moverDisparos() {
-        for (DisparoBasico disparo : vector_DisparosBasicos) {
+        for (Disparo disparo : vectorDisparos) {
 
             disparo.setPosition(disparo.getX() + disparo.getDeltaX(), disparo.getY() + disparo.getDeltaY());
             if (disparo.GetOrigen().distance(disparo.getX(), disparo.getY()) > disparo.alcance) {
-                disparo.fueraderango = true;
+                vectorDisparosLibres.add(disparo);
             }
         }
     }
 
     private void limpieza() {
-        for (DisparoBasico disparo : vector_DisparosBasicosLibres) {
-            vector_DisparosBasicos.remove(disparo);
+        for (Disparo disparo : vectorDisparosLibres) {
+            vectorDisparos.remove(disparo);
         }
-        vector_DisparosBasicosLibres.clear();
+        for (Enemigo enemigo : vectorEnemigosLibres) {
+            vectorEnemigos.remove(enemigo);
+        }
+        vectorDisparosLibres.clear();
 
+    }
+
+    private void colisionar() {
+        for (Disparo disparo : vectorDisparos) {
+            for (Enemigo enemigo : vectorEnemigos) {
+                if (disparo.getX() < enemigo.getX() + 25 &&
+                        disparo.getX() > enemigo.getX() - 25 &&
+                        disparo.getY() < enemigo.getY() + 12) {
+                    vectorDisparosLibres.add(disparo);
+                    vectorEnemigosLibres.add(enemigo);
+                }
+            }
+        }
     }
 }

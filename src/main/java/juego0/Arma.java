@@ -14,9 +14,9 @@ public class Arma {
 
     public Arma() {
     }
-    public void disparar(double x, double y, Tipoarma t, Vector<DisparoBasico> disparos_p38) {
+    public void disparar(double x, double y, Tipoarma t, Vector<Disparo> disparos_p38) {
         if (t == Tipoarma.BASE) {
-            DisparoBasico disparo = new DisparoBasico(x,y,0,-25);
+            Disparo disparo = new Disparo("images/1984/bala_simple.png",x,y,0,-25,550);
             disparos_p38.add(disparo);
         } 
 
