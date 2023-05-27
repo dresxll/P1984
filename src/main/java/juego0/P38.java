@@ -1,14 +1,12 @@
 package juego0;
 
 import java.awt.event.KeyEvent;
-import java.util.Vector;
 import com.entropyinteractive.Keyboard;
 
 public class P38 extends ObjetoGrafico implements ObjetoMovible {
 
     final private double NAVE_DESPLAZAMIENTO = 250.0;
     private Arma arma = new Arma();
-    private Vector<Disparo> disparos_p38;
     private boolean interrumpirdisparo = false;
 
     public P38(String filename) {
@@ -20,20 +18,16 @@ public class P38 extends ObjetoGrafico implements ObjetoMovible {
             this.setPosition(this.getX(), (this.getY() - NAVE_DESPLAZAMIENTO * delta));
         if (keyboard.isKeyPressed(KeyEvent.VK_S))
             this.setPosition(this.getX(), (this.getY() + NAVE_DESPLAZAMIENTO * delta));
-        if (keyboard.isKeyPressed(KeyEvent.VK_A) && (positionX - NAVE_DESPLAZAMIENTO * delta) > 0)
+        if (keyboard.isKeyPressed(KeyEvent.VK_A) && (getX() - NAVE_DESPLAZAMIENTO * delta) > 0)
             this.setPosition((this.getX() - NAVE_DESPLAZAMIENTO * delta), this.getY());
-        if (keyboard.isKeyPressed(KeyEvent.VK_D) && ((positionX + this.getWidth()) < 800))
+        if (keyboard.isKeyPressed(KeyEvent.VK_D) && ((getX() + this.getWidth()) < 800))
             this.setPosition((this.getX() + NAVE_DESPLAZAMIENTO * delta), this.getY());
         if (keyboard.isKeyPressed(KeyEvent.VK_X)) {
             if (!interrumpirdisparo) {
-                arma.disparar(this.getX()+(5), this.getY()-40, arma.getTipoarma(), disparos_p38);
+                arma.disparar(this.getX()+(5), this.getY()-40, arma.getTipoarma());
                 interrumpirdisparo = true;
             }
         } else
             interrumpirdisparo = false;
-    }
-
-    public void setVector(Vector<Disparo> disparos_p38) {
-        this.disparos_p38 = disparos_p38;
     }
 }

@@ -13,31 +13,30 @@ public class Disparo extends ObjetoGrafico {
         this.setOrigen(x, y);
         this.setPosition(x, y);
         this.setDelta(deltax, deltay);
-        this.alcance=alcance;
+        this.alcance = alcance;
     }
 
     private void setDelta(double deltax, double deltay) {
         delta.setLocation(deltax, deltay);
     }
 
-    public double getDeltaX() {
-        return delta.x;
-    }
-
-    public double getDeltaY() {
-        return delta.y;
-    }
-
     private void setOrigen(double x, double y) {
         this.origen.setLocation(x, y);
-        ;
     }
 
     public Point2D.Double GetOrigen() {
         return this.origen;
     }
+
     public double getAlcance() {
         return this.alcance;
     }
 
+    public double getDeltaX() {
+        return this.delta.x;
+    }
+
+    public double getDeltaY() {
+        return this.delta.y;
+    }
 }
