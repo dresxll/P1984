@@ -50,4 +50,11 @@ public abstract class ObjetoGrafico implements ObjetoMovible {
 
 	}
 
+	public void moverX(double x) {
+		positionX += x;
+	}
+
+	public void moverY(double y) {
+		positionY += y;
+	}
 }
