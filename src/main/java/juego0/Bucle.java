@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.*;
 
 public class Bucle extends JGame {
+    private Nivel nivel;
     private Date dInit = new Date(), dAhora;
-    private Fondo fondo;
     static public Vector<ObjetoGrafico> ObjetoGraficos = new Vector<>();
     static public Vector<ObjetoGrafico> ObjetosLibres = new Vector<>();
     private P38 p38 = new P38("images/1984/p38.png");
@@ -27,13 +27,11 @@ public class Bucle extends JGame {
     }
 
     public void gameStartup() {
-        System.out.println("gameStartup");
         try {
-            fondo = new Fondo("images/1984/fondo.jpg");
-            fondo.setPosition(9.5, -fondo.getHeight() + 610);
-            p38.setPosition((fondo.getWidth() / 2) - 19.5, 500);
-            ObjetoGraficos.add(new Enemigo("images/1984/enemigoPrueba.png"));
-            ObjetoGraficos.get(0).setPosition(p38.getX(), p38.getY() - 400);
+            nivel = new Nivel1();
+            nivel.iniciar();
+            System.out.println("gameStartup");
+            p38.setPosition((nivel.fondo.getWidth() / 2) - 19.5, 500);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -46,21 +44,21 @@ public class Bucle extends JGame {
     public void gameUpdate(double delta) {
         keyEvents = keyboard.getEvents();
         verificarCierre();
-        moverDisparos();
+        updateAll();
         limpieza();
-        fondo.update();
-        p38.update(delta, keyboard);
+        p38.update(keyboard);
     }
 
     public void gameDraw(Graphics2D g) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        fondo.display(g);
+        nivel.fondo.display(g);
         p38.display(g);
         dibujarObjetosGraficos(g);
         dibujarHUD(g);
     }
 
-    private void moverDisparos() {
+    private void updateAll() {
+        nivel.fondo.update();
         for (ObjetoGrafico objetoGrafico : ObjetoGraficos) {
             objetoGrafico.update();
         }

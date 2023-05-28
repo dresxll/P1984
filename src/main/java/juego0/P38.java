@@ -5,35 +5,33 @@ import com.entropyinteractive.Keyboard;
 
 public class P38 extends ObjetoGrafico {
 
-    final private double NAVE_DESPLAZAMIENTO = 250.0;
-    private Arma arma = new Arma();
+    private Arma arma = new ArmaBase();
     private boolean interrumpirdisparo = false;
 
     public P38(String filename) {
         super(filename);
     }
-
-    public void update(double delta, Keyboard keyboard) {
+ 
+    public void update(Keyboard keyboard) {
         if (keyboard.isKeyPressed(KeyEvent.VK_W) && positionY > 30)
-            positionY -= 4;
+            positionY -= 6;
         if (keyboard.isKeyPressed(KeyEvent.VK_S) && positionY < 556)
-            positionY += 4;
-        if (keyboard.isKeyPressed(KeyEvent.VK_A) && (positionX > 4))
-            positionX -= 4;
+            positionY += 6;
+        if (keyboard.isKeyPressed(KeyEvent.VK_A) && (positionX > 6))
+            positionX -= 6;
         if (keyboard.isKeyPressed(KeyEvent.VK_D) && (positionX < 756))
-            positionX += 4;
+            positionX += 6;
         if (keyboard.isKeyPressed(KeyEvent.VK_X)) {
             if (!interrumpirdisparo) {
-                arma.disparar(positionX, positionY, arma.getTipoarma());
+                arma.disparar(positionX, positionY);
                 interrumpirdisparo = true;
             }
         } else
             interrumpirdisparo = false;
     }
 
-    @Override
+@Override
     public void update() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
-    }
+        //Método no implementado.
+    } 
 }
