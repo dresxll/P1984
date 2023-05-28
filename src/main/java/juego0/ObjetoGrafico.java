@@ -1,15 +1,14 @@
 package juego0;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.awt.image.*;
 import javax.imageio.*;
 import java.io.*;
 
-public abstract class ObjetoGrafico {
+public abstract class ObjetoGrafico implements ObjetoMovible {
 	private BufferedImage imagen = null;
-	private double positionX = 0;
-	private double positionY = 0;
+	protected double positionX = 0;
+	protected double positionY = 0;
 
 	public ObjetoGrafico(String filename) {
 		try {
@@ -51,19 +50,4 @@ public abstract class ObjetoGrafico {
 
 	}
 
-	protected Point2D.Double GetOrigen() {
-		return null;
-	}
-
-	protected double getAlcance() {
-		return 0;
-	}
-
-	protected double getDeltaX() {
-		return 0;
-	}
-
-	protected double getDeltaY() {
-		return 0;
-	}
 }

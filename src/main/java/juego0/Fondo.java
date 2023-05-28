@@ -5,4 +5,9 @@ public class Fondo extends ObjetoGrafico {
 		super(filename);
 	}
 
+	@Override
+	public void update() {
+		positionY+=1;
+	}
+
 }

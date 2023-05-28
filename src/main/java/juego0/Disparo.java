@@ -3,40 +3,25 @@ package juego0;
 import java.awt.geom.Point2D;
 
 public class Disparo extends ObjetoGrafico {
+    public Boolean fueraderango = false;
+    private double alcance;
     private Point2D.Double delta = new Point2D.Double();
     private Point2D.Double origen = new Point2D.Double();
-    public Boolean fueraderango = false;
-    protected double alcance;
-
     public Disparo(String rutaImagen, double x, double y, double deltax, double deltay, double alcance) {
         super(rutaImagen);
-        this.setOrigen(x, y);
-        this.setPosition(x, y);
-        this.setDelta(deltax, deltay);
+        positionX=x;
+        positionY=y;
+        this.origen.setLocation(x,y);
+        this.delta.setLocation(deltax, deltay);
         this.alcance = alcance;
     }
 
-    private void setDelta(double deltax, double deltay) {
-        delta.setLocation(deltax, deltay);
-    }
-
-    private void setOrigen(double x, double y) {
-        this.origen.setLocation(x, y);
-    }
-
-    public Point2D.Double GetOrigen() {
-        return this.origen;
-    }
-
-    public double getAlcance() {
-        return this.alcance;
-    }
-
-    public double getDeltaX() {
-        return this.delta.x;
-    }
-
-    public double getDeltaY() {
-        return this.delta.y;
+    @Override
+    public void update() {
+        this.positionX+=delta.x;
+        this.positionY+=delta.y;
+        if(this.origen.distance(positionX, positionY)>this.alcance) {
+            Bucle.ObjetosLibres.add(this);
+        }
     }
 }

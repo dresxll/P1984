@@ -1,14 +1,16 @@
 package juego0;
 
-import com.entropyinteractive.Keyboard;
+import java.awt.geom.Point2D;
 
-public class Enemigo extends ObjetoGrafico implements ObjetoMovible {
-
+public class Enemigo extends ObjetoGrafico {
+    private Point2D.Double delta = new Point2D.Double();
     public Enemigo(String filename) {
         super(filename);
     }
 
-    public void update(double delta, Keyboard keyboard) {
+
+    @Override
+    public void update() {
 
     }
 }

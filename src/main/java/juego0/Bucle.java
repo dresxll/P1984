@@ -10,10 +10,10 @@ public class Bucle extends JGame {
     private Date dInit = new Date(), dAhora;
     private Fondo fondo;
     static public Vector<ObjetoGrafico> ObjetoGraficos = new Vector<>();
-    private Vector<ObjetoGrafico> ObjetosLibres = new Vector<>();
+    static public Vector<ObjetoGrafico> ObjetosLibres = new Vector<>();
     private P38 p38 = new P38("images/1984/p38.png");
-    LinkedList<KeyEvent> keyEvents;
-    Keyboard keyboard = this.getKeyboard();
+    public LinkedList<KeyEvent> keyEvents;
+    public Keyboard keyboard = this.getKeyboard();
 
     public static void main(String[] args) {
         Bucle game = new Bucle();
@@ -24,7 +24,6 @@ public class Bucle extends JGame {
     public Bucle() {
         super("App", 800, 600);
         System.out.println(appProperties.stringPropertyNames());
-
     }
 
     public void gameStartup() {
@@ -49,8 +48,7 @@ public class Bucle extends JGame {
         verificarCierre();
         moverDisparos();
         limpieza();
-        // colisionar();
-        fondo.setPosition(fondo.getX(), fondo.getY() + 0.5);
+        fondo.update();
         p38.update(delta, keyboard);
     }
 
@@ -64,13 +62,7 @@ public class Bucle extends JGame {
 
     private void moverDisparos() {
         for (ObjetoGrafico objetoGrafico : ObjetoGraficos) {
-            if (objetoGrafico.getClass() == Disparo.class) {
-                objetoGrafico.setPosition(objetoGrafico.getX() + objetoGrafico.getDeltaX(), objetoGrafico.getY() + objetoGrafico.getDeltaY());
-                if (objetoGrafico.GetOrigen().distance(objetoGrafico.getX(), objetoGrafico.getY()) > objetoGrafico.getAlcance()) {
-                    ObjetosLibres.add(objetoGrafico);
-                }
-            }
-
+            objetoGrafico.update();
         }
     }
 
@@ -80,19 +72,6 @@ public class Bucle extends JGame {
         }
         ObjetosLibres.clear();
 
-    }
-
-    private void colisionar() {
-        for (ObjetoGrafico disparo : ObjetoGraficos) {
-            for (ObjetoGrafico enemigo : ObjetoGraficos) {
-                if (disparo.getX() < enemigo.getX() + 25 &&
-                        disparo.getX() > enemigo.getX() - 25 &&
-                        disparo.getY() < enemigo.getY() + 12) {
-                    ObjetosLibres.add(disparo);
-                    ObjetosLibres.add(enemigo);
-                }
-            }
-        }
     }
 
     private void verificarCierre() {
