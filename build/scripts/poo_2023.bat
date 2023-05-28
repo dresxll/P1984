@@ -72,7 +72,7 @@ set CLASSPATH=%APP_HOME%\lib\poo_2023-0.1.0.jar;%APP_HOME%\lib\bucleJuego.jar;%A
 
 
 @rem Execute poo_2023
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %POO_2023_OPTS%  -classpath "%CLASSPATH%" juego0.Bucle %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %POO_2023_OPTS%  -classpath "%CLASSPATH%" juego0.core.Bucle %*
 
 :end
 @rem End local scope for the variables with windows NT shell

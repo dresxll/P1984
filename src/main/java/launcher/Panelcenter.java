@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class Panelcenter extends JPanel implements ActionListener {
-    juego0.Bucle juego0;
+    juego0.core.Bucle juego0;
     Thread t;
     static Panelcenter panelcenter;
     static CardLayout cardLayout;
@@ -68,7 +68,7 @@ public class Panelcenter extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent evt) {
             if (evt.getSource().equals(boton1[0])) {
-                juego0 = new juego0.Bucle();
+                juego0 = new juego0.core.Bucle();
 
 						t = new Thread() {
 						    public void run() {
