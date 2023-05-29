@@ -12,10 +12,11 @@ import java.util.*;
 
 public class Bucle extends JGame {
     private Nivel nivel;
+    Thread thread;
     private Date dInit = new Date(), dAhora;
     static public Vector<ObjetoGrafico> ObjetoGraficos = new Vector<>();
     static public Vector<ObjetoGrafico> ObjetosLibres = new Vector<>();
-    private P38 p38 = new P38("images/1984/p38.png");
+    private P38 p38 = new P38();
     public LinkedList<KeyEvent> keyEvents;
     public Keyboard keyboard = this.getKeyboard();
 
@@ -33,9 +34,9 @@ public class Bucle extends JGame {
     public void gameStartup() {
         try {
             nivel = new Nivel1();
-            nivel.iniciar();
+            nivel.start();
             System.out.println("gameStartup");
-            p38.setPosition((nivel.getFondo().getWidth() / 2)-p38.getWidth()/2, 500);
+            p38.setPosition(400 - p38.getWidth() / 2, 500);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -65,6 +66,12 @@ public class Bucle extends JGame {
         nivel.getFondo().update();
         for (ObjetoGrafico objetoGrafico : ObjetoGraficos) {
             objetoGrafico.update();
+            for (ObjetoGrafico segundoObjeto : ObjetoGraficos) {
+                if ((objetoGrafico!=segundoObjeto)&&ints(objetoGrafico, segundoObjeto)) {
+                    ObjetosLibres.add(objetoGrafico);
+                    ObjetosLibres.add(segundoObjeto);
+                }
+            }
         }
     }
 
@@ -101,5 +108,24 @@ public class Bucle extends JGame {
         g.setColor(Color.white);
         g.drawString("Tiempo de Juego: " + diffMinutes + ":" + diffSeconds, 12, 42);
         g.drawString("Tecla ESC = Fin del Juego ", 660, 42);
+    }
+
+    private boolean ints(ObjetoGrafico a, ObjetoGrafico b) {
+        double ax = a.getX();
+        double ay = a.getY();
+        double aw = a.getWidth();
+        double ah = a.getHeight();
+        double bx = b.getX();
+        double by = b.getY();
+        double bw = b.getWidth();
+        double bh = b.getHeight();
+        aw += ax;
+        ah += ay;
+        bw += bx;
+        bh += by;
+        return ((aw < ax || aw > bx) &&
+                (ah < ay || ah > by) &&
+                (bw < bx || bw > ax) &&
+                (bh < by || bh > ay));
     }
 }

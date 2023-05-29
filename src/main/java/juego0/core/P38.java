@@ -11,8 +11,8 @@ public class P38 extends ObjetoGrafico implements ObjetoMovible {
     private Arma arma = new ArmaBase();
     private boolean interrumpirdisparo = false;
 
-    public P38(String filename) {
-        super(filename);
+    public P38() {
+        super("images/1984/p38.png");
     }
  
     public void update(Keyboard keyboard) {

@@ -5,6 +5,7 @@ plugins {
 
 version = '0.1.0'
 mainClassName = 'juego0.core.Bucle'
+//mainClassName = 'launcher.Ventana'
 
 repositories {
 	mavenCentral()
