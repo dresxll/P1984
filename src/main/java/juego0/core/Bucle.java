@@ -154,8 +154,13 @@ public class Bucle extends JGame {
     }
 
     private void colisionar(Disparo disparo, Enemigo enemigo) {
-        explosiones.add(new Explosion(enemigo.getX(),enemigo.getY()));
+        
+        enemigo.recibirDanio(disparo.getDanio());
+        if(enemigo.getEnergia()<=0) {
+            explosiones.add(new Explosion(enemigo.getX(),enemigo.getY()));
+            enemigosLibres.add(enemigo);
+        }
         disparosLibres.add(disparo);
-        enemigosLibres.add(enemigo);
+        
     }
 }
