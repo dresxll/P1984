@@ -12,6 +12,9 @@ import java.util.Stack;
 public class Bucle extends JGame {
     private Nivel nivel;
     private Date dInit = new Date(), dAhora;
+    public long dateDiff;
+    public long diffSeconds;
+    public long diffMinutes;
     static public Vector<Disparo> disparosLibres = new Vector<>();
     static public Vector<Explosion> explosiones = new Vector<>();
     static public Vector<Explosion> explosionesLibres = new Vector<>();
@@ -52,15 +55,12 @@ public class Bucle extends JGame {
 
     public void gameUpdate(double delta) {
         limpieza();
-        for (Enemigo enemigo : enemigosEnCola) {
-            enemigos.add(enemigo);
-        }
-        enemigosEnCola.clear();
+        actualizarHora();
+        cargarCola();
         keyEvents = keyboard.getEvents();
         verificarCierre();
         moverObjetos();
         p38.update(keyboard);
-        nivel.getFondo().update();
     }
 
     public void gameDraw(Graphics2D g) {
@@ -72,6 +72,7 @@ public class Bucle extends JGame {
     }
 
     private void moverObjetos() {
+        nivel.getFondo().update();
         for (Enemigo enemigo : enemigos) {
             enemigo.update();
         }
@@ -92,7 +93,7 @@ public class Bucle extends JGame {
     }
 
     private void limpieza() {
-        
+
         for (Disparo disparo : disparosLibres) {
             disparos.remove(disparo);
         }
@@ -130,13 +131,16 @@ public class Bucle extends JGame {
     }
 
     private void dibujarHUD(Graphics2D g) {
-        dAhora = new Date();
-        long dateDiff = dAhora.getTime() - dInit.getTime();
-        long diffSeconds = dateDiff / 1000 % 60;
-        long diffMinutes = dateDiff / (60 * 1000) % 60;
         g.setColor(Color.white);
         g.drawString("Tiempo de Juego: " + diffMinutes + ":" + diffSeconds, 12, 42);
         g.drawString("Tecla ESC = Fin del Juego ", 660, 42);
+    }
+
+    private void actualizarHora() {
+        dAhora = new Date();
+        dateDiff = dAhora.getTime() - dInit.getTime();
+        diffSeconds = dateDiff / 1000 % 60;
+        diffMinutes = dateDiff / (60 * 1000) % 60;
     }
 
     private boolean intersección(ObjetoGrafico a, ObjetoGrafico b) {
@@ -159,13 +163,20 @@ public class Bucle extends JGame {
     }
 
     private void colisionar(Disparo disparo, Enemigo enemigo) {
-        
+
         enemigo.recibirDanio();
-        if(enemigo.getEnergia()<=0) {
-            explosiones.add(new Explosion(enemigo.getX(),enemigo.getY()));
+        if (enemigo.getEnergia() <= 0) {
+            explosiones.add(new Explosion(enemigo.getX(), enemigo.getY()));
             enemigosLibres.add(enemigo);
         }
         disparosLibres.add(disparo);
-        
+
+    }
+
+    private void cargarCola() {
+        for (Enemigo enemigo : enemigosEnCola) {
+            enemigos.add(enemigo);
+        }
+        enemigosEnCola.clear();
     }
 }
