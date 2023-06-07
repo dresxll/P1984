@@ -7,7 +7,6 @@ import juego0.core.Bucle;
 public class Disparo extends ObjetoGrafico {
     public Boolean fueraderango = false;
     private double alcance;
-    private int danio;
     private Point2D.Double delta = new Point2D.Double();
     private Point2D.Double origen = new Point2D.Double();
     public Disparo(String rutaImagen, double x, double y, double deltax, double deltay, double alcance , int danio) {
@@ -17,7 +16,6 @@ public class Disparo extends ObjetoGrafico {
         this.origen.setLocation(x,y);
         this.delta.setLocation(deltax, deltay);
         this.alcance = alcance;
-        this.danio=danio;
     }
 
     @Override
@@ -29,7 +27,4 @@ public class Disparo extends ObjetoGrafico {
         }
     }
 
-    public int getDanio() {
-        return danio;
-    }
 }

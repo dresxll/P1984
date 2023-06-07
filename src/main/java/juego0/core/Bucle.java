@@ -18,6 +18,7 @@ public class Bucle extends JGame {
     static public Vector<Disparo> disparos = new Vector<>();
     static public Vector<Enemigo> enemigos = new Vector<>();
     static public Vector<Enemigo> enemigosLibres = new Vector<>();
+    static public Vector<Enemigo> enemigosEnCola = new Vector<>();
     static public Stack<ObjetoGrafico> objetosPorAgregar = new Stack<>();
     private P38 p38 = new P38();
     public LinkedList<KeyEvent> keyEvents;
@@ -51,6 +52,10 @@ public class Bucle extends JGame {
 
     public void gameUpdate(double delta) {
         limpieza();
+        for (Enemigo enemigo : enemigosEnCola) {
+            enemigos.add(enemigo);
+        }
+        enemigosEnCola.clear();
         keyEvents = keyboard.getEvents();
         verificarCierre();
         moverObjetos();
@@ -155,7 +160,7 @@ public class Bucle extends JGame {
 
     private void colisionar(Disparo disparo, Enemigo enemigo) {
         
-        enemigo.recibirDanio(disparo.getDanio());
+        enemigo.recibirDanio();
         if(enemigo.getEnergia()<=0) {
             explosiones.add(new Explosion(enemigo.getX(),enemigo.getY()));
             enemigosLibres.add(enemigo);

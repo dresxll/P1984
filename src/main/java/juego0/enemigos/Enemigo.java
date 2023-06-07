@@ -5,11 +5,11 @@ import java.awt.geom.Point2D;
 import juego0.principal.ObjetoGrafico;
 
 public abstract class Enemigo extends ObjetoGrafico {
-    int energia;
-    protected Point2D.Double delta = new Point2D.Double();
+    protected int energia;
+    protected Point2D.Double delta;
     public Enemigo(String filename) {
         super(filename);
     }
-    public abstract void recibirDanio(int danio);
+    public abstract void recibirDanio();
     public abstract int getEnergia();
 }

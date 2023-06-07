@@ -8,7 +8,7 @@ public class ArmaBase extends Arma {
         ImagenDisparo = "images/1984/bala_simple.png";
     }
     public void disparar(double x, double y) {
-        Disparo disparo = new Disparo(ImagenDisparo,x,y,0,-15,550,20);
+        Disparo disparo = new Disparo(ImagenDisparo,x,y,0,-15,550,1);
         Bucle.disparos.add(disparo);
     }
 }
