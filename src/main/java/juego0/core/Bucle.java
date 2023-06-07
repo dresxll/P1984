@@ -1,21 +1,24 @@
 package juego0.core;
 
 import com.entropyinteractive.*;
-
-import juego0.niveles.Nivel;
-import juego0.niveles.Nivel1;
-
+import juego0.core.niveles.*;
+import juego0.enemigos.*;
+import juego0.principal.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.LinkedList;
 import java.util.*;
+import java.util.Stack;
 
 public class Bucle extends JGame {
     private Nivel nivel;
-    Thread thread;
     private Date dInit = new Date(), dAhora;
-    static public Vector<ObjetoGrafico> ObjetoGraficos = new Vector<>();
-    static public Vector<ObjetoGrafico> ObjetosLibres = new Vector<>();
+    static public Vector<Disparo> disparosLibres = new Vector<>();
+    static public Vector<Explosion> explosiones = new Vector<>();
+    static public Vector<Explosion> explosionesLibres = new Vector<>();
+    static public Vector<Disparo> disparos = new Vector<>();
+    static public Vector<Enemigo> enemigos = new Vector<>();
+    static public Vector<Enemigo> enemigosLibres = new Vector<>();
+    static public Stack<ObjetoGrafico> objetosPorAgregar = new Stack<>();
     private P38 p38 = new P38();
     public LinkedList<KeyEvent> keyEvents;
     public Keyboard keyboard = this.getKeyboard();
@@ -47,11 +50,12 @@ public class Bucle extends JGame {
     }
 
     public void gameUpdate(double delta) {
+        limpieza();
         keyEvents = keyboard.getEvents();
         verificarCierre();
-        updateAll();
-        limpieza();
+        moverObjetos();
         p38.update(keyboard);
+        nivel.getFondo().update();
     }
 
     public void gameDraw(Graphics2D g) {
@@ -62,25 +66,40 @@ public class Bucle extends JGame {
         dibujarHUD(g);
     }
 
-    private void updateAll() {
-        nivel.getFondo().update();
-        for (ObjetoGrafico objetoGrafico : ObjetoGraficos) {
-            objetoGrafico.update();
-            for (ObjetoGrafico segundoObjeto : ObjetoGraficos) {
-                if ((objetoGrafico!=segundoObjeto)&&ints(objetoGrafico, segundoObjeto)) {
-                    ObjetosLibres.add(objetoGrafico);
-                    ObjetosLibres.add(segundoObjeto);
-                }
-            }
+    private void moverObjetos() {
+        for (Enemigo enemigo : enemigos) {
+            enemigo.update();
         }
+        for (Explosion explosion : explosiones) {
+            explosion.update();
+        }
+        for (Disparo disparo : disparos) {
+            disparo.update();
+            for (Enemigo enemigo : enemigos) {
+                if (intersección(disparo, enemigo)) {
+                    colisionar(disparo, enemigo);
+                }
+
+            }
+
+        }
+
     }
 
     private void limpieza() {
-        for (ObjetoGrafico objetoGrafico : ObjetosLibres) {
-            ObjetoGraficos.remove(objetoGrafico);
+        
+        for (Disparo disparo : disparosLibres) {
+            disparos.remove(disparo);
         }
-        ObjetosLibres.clear();
-
+        disparosLibres.clear();
+        for (Explosion explosion : explosionesLibres) {
+            explosiones.remove(explosion);
+        }
+        explosionesLibres.clear();
+        for (Enemigo enemigo : enemigosLibres) {
+            enemigos.remove(enemigo);
+        }
+        enemigosLibres.clear();
     }
 
     private void verificarCierre() {
@@ -94,9 +113,14 @@ public class Bucle extends JGame {
     }
 
     private void dibujarObjetosGraficos(Graphics2D g) {
-        for (ObjetoGrafico objetoGrafico : ObjetoGraficos) {
-            if (!ObjetosLibres.contains(objetoGrafico))
-                objetoGrafico.display(g);
+        for (Enemigo enemigo : enemigos) {
+            enemigo.display(g);
+        }
+        for (Explosion explosion : explosiones) {
+            explosion.display(g);
+        }
+        for (Disparo disparo : disparos) {
+            disparo.display(g);
         }
     }
 
@@ -110,7 +134,7 @@ public class Bucle extends JGame {
         g.drawString("Tecla ESC = Fin del Juego ", 660, 42);
     }
 
-    private boolean ints(ObjetoGrafico a, ObjetoGrafico b) {
+    private boolean intersección(ObjetoGrafico a, ObjetoGrafico b) {
         double ax = a.getX();
         double ay = a.getY();
         double aw = a.getWidth();
@@ -127,5 +151,11 @@ public class Bucle extends JGame {
                 (ah < ay || ah > by) &&
                 (bw < bx || bw > ax) &&
                 (bh < by || bh > ay));
+    }
+
+    private void colisionar(Disparo disparo, Enemigo enemigo) {
+        explosiones.add(new Explosion(enemigo.getX(),enemigo.getY()));
+        disparosLibres.add(disparo);
+        enemigosLibres.add(enemigo);
     }
 }

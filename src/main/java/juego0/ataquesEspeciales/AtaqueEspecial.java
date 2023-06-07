@@ -1,6 +1,6 @@
 package juego0.ataquesEspeciales;
 
-import juego0.core.ObjetoGrafico;
+import juego0.principal.ObjetoGrafico;
 
 public class AtaqueEspecial extends ObjetoGrafico {
 

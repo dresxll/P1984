@@ -1,6 +1,6 @@
 package juego0.bonus;
 
-import juego0.core.ObjetoGrafico;
+import juego0.principal.ObjetoGrafico;
 
 public class Bonus extends ObjetoGrafico{
 
@@ -10,7 +10,7 @@ public class Bonus extends ObjetoGrafico{
 
     @Override
     public void update() {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
+
     
 }

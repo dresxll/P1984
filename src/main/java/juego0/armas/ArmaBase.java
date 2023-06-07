@@ -1,7 +1,7 @@
 package juego0.armas;
 
 import juego0.core.Bucle;
-import juego0.core.Disparo;
+import juego0.principal.Disparo;
 
 public class ArmaBase extends Arma {
     public ArmaBase() {
@@ -9,7 +9,7 @@ public class ArmaBase extends Arma {
     }
     public void disparar(double x, double y) {
         Disparo disparo = new Disparo(ImagenDisparo,x,y,0,-15,550);
-        Bucle.ObjetoGraficos.add(disparo);
+        Bucle.disparos.add(disparo);
     }
 }
  

@@ -108,11 +108,10 @@ public class Menu1943 extends JPanel implements ActionListener {
         }
     }
     
-    
     private static void saveConfig() {
         JSONObject configJson = new JSONObject();
         for (int i = 0; i < 16; i++) {
-            configJson.put(label[i], comboBox.get(i).getSelectedItem());
+       //     configJson.put(label[i], comboBox.get(i).getSelectedItem());
         }
         try (FileWriter fileWriter = new FileWriter("src/main/resources/config.json")) {
             fileWriter.write(configJson.toJSONString());

@@ -1,5 +1,6 @@
 package juego0.enemigos;
 
+
 public class Enemigo1 extends Enemigo{
     public Enemigo1(double x, double y) {
         super("images/1984/enemigo1.png");
@@ -12,4 +13,5 @@ public class Enemigo1 extends Enemigo{
         this.setPosition(positionX + delta.x, positionY);
         
     }
+
 }
