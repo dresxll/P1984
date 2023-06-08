@@ -18,12 +18,12 @@ public class Bucle extends JGame {
     static public Vector<Disparo> disparosLibres = new Vector<>();
     static public Vector<Explosion> explosiones = new Vector<>();
     static public Vector<Explosion> explosionesLibres = new Vector<>();
-    static public Vector<Disparo> disparos = new Vector<>();
+    public Vector<Disparo> disparos = new Vector<>();
     static public Vector<Enemigo> enemigos = new Vector<>();
     static public Vector<Enemigo> enemigosLibres = new Vector<>();
     static public Vector<Enemigo> enemigosEnCola = new Vector<>();
     static public Stack<ObjetoGrafico> objetosPorAgregar = new Stack<>();
-    private P38 p38 = new P38();
+    private P38 p38 = new P38(disparos);
     public LinkedList<KeyEvent> keyEvents;
     public Keyboard keyboard = this.getKeyboard();
 
@@ -143,7 +143,7 @@ public class Bucle extends JGame {
         diffMinutes = dateDiff / (60 * 1000) % 60;
     }
 
-    private boolean intersección(ObjetoGrafico a, ObjetoGrafico b) {
+    public static boolean intersección(ObjetoGrafico a, ObjetoGrafico b) {
         double ax = a.getX();
         double ay = a.getY();
         double aw = a.getWidth();

@@ -1,9 +1,12 @@
 package juego0.bonus;
 
-public class CambioArma extends Bonus {
+public class CambioArma {
+    
+    public CambioArma(double x, double y) {
 
-    public CambioArma(String filename) {
-        super(filename);
+        //super(null);
+        //this.setPosition(x, y);
     }
+
     
 }

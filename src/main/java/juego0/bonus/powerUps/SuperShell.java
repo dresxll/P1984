@@ -1,9 +1,10 @@
 package juego0.bonus.powerUps;
 
-public class SuperShell extends PowerUp{
+public class SuperShell {
 
-    public SuperShell(String filename) {
-        super(filename);
+    public SuperShell(double x, double y) {
+        //super(null);
+        //this.setPosition(x, y);
     }
     
 }

@@ -1,9 +1,10 @@
 package juego0.bonus;
 
-public class ObtenerRefuerzos extends Bonus{
+public class ObtenerRefuerzos {
 
-    public ObtenerRefuerzos(String filename) {
-        super(filename);
+    public ObtenerRefuerzos(double x, double y) {
+       // super("images/1984/Refuerzos.png");
+        //this.setPosition(x, y);
     }
     
 }

@@ -7,14 +7,14 @@ public class Enemigo1 extends Enemigo {
         super("images/1984/enemigo1.png");
         setPosition(x, y);
         delta = new Point2D.Double();
-        delta.setLocation(0, 1);
+        delta.setLocation(0, 2);
         energia = 1;
 
     }
 
     @Override
     public void update() {
-        this.setPosition(positionX + (Math.sin(Math.toRadians(positionY) * 5)) * 6, positionY + delta.y);
+        this.setPosition(positionX + (Math.sin(Math.toRadians(positionY))*2), positionY + delta.y);
 
     }
 

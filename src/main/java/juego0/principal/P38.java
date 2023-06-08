@@ -1,18 +1,21 @@
 package juego0.principal;
 
 import java.awt.event.KeyEvent;
+import java.util.Vector;
+
 import com.entropyinteractive.Keyboard;
 
 import juego0.armas.Arma;
 import juego0.armas.ArmaBase;
 
 public class P38 extends ObjetoGrafico implements ObjetoMovible {
-
-    private Arma arma = new ArmaBase();
+    Vector<Disparo> disparos;
+    private Arma arma;
     private boolean interrumpirdisparo = false;
-
-    public P38() {
+    public P38(Vector<Disparo> disparos) {
         super("images/1984/p38.png");
+        this.disparos=disparos;
+        arma= new ArmaBase(disparos);
     }
  
     public void update(Keyboard keyboard) {

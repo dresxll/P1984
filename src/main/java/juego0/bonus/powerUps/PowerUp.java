@@ -1,11 +1,10 @@
 package juego0.bonus.powerUps;
 
-import juego0.bonus.Bonus;
-
-public class PowerUp extends Bonus{
+public abstract class PowerUp{
 
     public PowerUp(String filename) {
-        super(filename);
+        //super(filename);
+        
     }
     
 }

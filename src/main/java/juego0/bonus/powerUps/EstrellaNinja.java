@@ -1,9 +1,10 @@
 package juego0.bonus.powerUps;
 
-public class EstrellaNinja extends PowerUp{
+public class EstrellaNinja {
 
-    public EstrellaNinja(String filename) {
-        super(filename);
+    public EstrellaNinja(double x, double y) {
+        //super(null);
+        //this.setPosition(x, y);
     }
     
 }

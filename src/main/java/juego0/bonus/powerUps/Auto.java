@@ -1,9 +1,10 @@
 package juego0.bonus.powerUps;
 
-public class Auto extends PowerUp {
+public class Auto{
 
-    public Auto(String filename) {
-        super(filename);
+    public Auto(double x, double y) {
+    //    super(null);
+    //    this.setPosition(x, y);
     }
     
 }
