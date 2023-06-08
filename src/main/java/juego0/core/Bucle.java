@@ -17,10 +17,10 @@ public class Bucle extends JGame {
     private Vector<Disparo> disparosLibres = new Vector<>();
     private Vector<Explosion> explosiones = new Vector<>();
     private Vector<Explosion> explosionesLibres = new Vector<>();
-    public Vector<Disparo> disparos = new Vector<>();
-    static public Vector<Enemigo> enemigos = new Vector<>();
+    private Vector<Disparo> disparos = new Vector<>();
+    private Vector<Enemigo> enemigos = new Vector<>();
     private Vector<Enemigo> enemigosLibres = new Vector<>();
-    static public Vector<Enemigo> enemigosEnCola = new Vector<>();
+    private Vector<Enemigo> enemigosEnCola = new Vector<>();
     private P38 p38 = new P38(disparos,disparosLibres);
     private LinkedList<KeyEvent> keyEvents;
     private Keyboard keyboard = this.getKeyboard();
@@ -38,7 +38,7 @@ public class Bucle extends JGame {
 
     public void gameStartup() {
         try {
-            nivel = new Nivel1();
+            nivel = new Nivel1(enemigosEnCola);
             nivel.start();
             System.out.println("gameStartup");
             p38.setPosition(400 - p38.getWidth() / 2, 500);
