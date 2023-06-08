@@ -9,13 +9,11 @@ import juego0.armas.Arma;
 import juego0.armas.ArmaBase;
 
 public class P38 extends ObjetoGrafico implements ObjetoMovible {
-    Vector<Disparo> disparos;
     private Arma arma;
     private boolean interrumpirdisparo = false;
-    public P38(Vector<Disparo> disparos) {
+    public P38(Vector<Disparo> disparos,Vector<Disparo> disparosLibres) {
         super("images/1984/p38.png");
-        this.disparos=disparos;
-        arma= new ArmaBase(disparos);
+        arma=new ArmaBase(disparos, disparosLibres);
     }
  
     public void update(Keyboard keyboard) {

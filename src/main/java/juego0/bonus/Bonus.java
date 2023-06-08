@@ -16,7 +16,7 @@ public abstract class Bonus extends ObjetoGrafico{
     public void update(){
         for (Disparo disparo : disparos) {
             if (Bucle.intersección(disparo, this)) {
-                Bucle.disparosLibres.add(disparo);
+            //    Bucle.disparosLibres.add(disparo);
                 
             }
         }

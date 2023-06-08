@@ -1,21 +1,22 @@
 package juego0.principal;
 
 import java.awt.geom.Point2D;
-
-import juego0.core.Bucle;
+import java.util.Vector;
 
 public class Disparo extends ObjetoGrafico {
     public Boolean fueraderango = false;
+    Vector<Disparo> disparosLibres;
     private double alcance;
     private Point2D.Double delta = new Point2D.Double();
     private Point2D.Double origen = new Point2D.Double();
-    public Disparo(String rutaImagen, double x, double y, double deltax, double deltay, double alcance , int danio) {
+    public Disparo(Vector<Disparo> disparosLibres,String rutaImagen, double x, double y, double deltax, double deltay, double alcance , int danio) {
         super(rutaImagen);
         positionX=x-(this.getWidth()/2);
         positionY=y;
         this.origen.setLocation(x,y);
         this.delta.setLocation(deltax, deltay);
         this.alcance = alcance;
+        this.disparosLibres=disparosLibres;
     }
 
     @Override
@@ -23,7 +24,7 @@ public class Disparo extends ObjetoGrafico {
         this.positionX+=delta.x;
         this.positionY+=delta.y;
         if(this.origen.distance(positionX, positionY)>alcance) {
-            Bucle.disparosLibres.add(this);
+            disparosLibres.add(this);
         }
     }
 

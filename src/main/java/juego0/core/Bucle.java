@@ -7,25 +7,23 @@ import juego0.principal.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.Stack;
 
 public class Bucle extends JGame {
     private Nivel nivel;
     private Date dInit = new Date(), dAhora;
-    public long dateDiff;
-    public long diffSeconds;
-    public long diffMinutes;
-    static public Vector<Disparo> disparosLibres = new Vector<>();
-    static public Vector<Explosion> explosiones = new Vector<>();
-    static public Vector<Explosion> explosionesLibres = new Vector<>();
+    private long dateDiff;
+    private long diffSeconds;
+    private long diffMinutes;
+    private Vector<Disparo> disparosLibres = new Vector<>();
+    private Vector<Explosion> explosiones = new Vector<>();
+    private Vector<Explosion> explosionesLibres = new Vector<>();
     public Vector<Disparo> disparos = new Vector<>();
     static public Vector<Enemigo> enemigos = new Vector<>();
-    static public Vector<Enemigo> enemigosLibres = new Vector<>();
+    private Vector<Enemigo> enemigosLibres = new Vector<>();
     static public Vector<Enemigo> enemigosEnCola = new Vector<>();
-    static public Stack<ObjetoGrafico> objetosPorAgregar = new Stack<>();
-    private P38 p38 = new P38(disparos);
-    public LinkedList<KeyEvent> keyEvents;
-    public Keyboard keyboard = this.getKeyboard();
+    private P38 p38 = new P38(disparos,disparosLibres);
+    private LinkedList<KeyEvent> keyEvents;
+    private Keyboard keyboard = this.getKeyboard();
 
     public static void main(String[] args) {
         Bucle game = new Bucle();
@@ -166,7 +164,7 @@ public class Bucle extends JGame {
 
         enemigo.recibirDanio();
         if (enemigo.getEnergia() <= 0) {
-            explosiones.add(new Explosion(enemigo.getX(), enemigo.getY()));
+            explosiones.add(new Explosion(explosionesLibres,enemigo.getX(), enemigo.getY()));
             enemigosLibres.add(enemigo);
         }
         disparosLibres.add(disparo);
