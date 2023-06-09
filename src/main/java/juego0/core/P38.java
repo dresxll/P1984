@@ -9,15 +9,13 @@ import juego0.armas.Arma;
 import juego0.armas.ArmaBase;
 
 public class P38 extends ObjetoGrafico {
-    private Vector<ObjetoGrafico> objetosGraficos;
     private Keyboard keyboard;
     private boolean interrumpirdisparo = false;
-    private Arma arma = new ArmaBase(objetosGraficos);
-    public P38(Keyboard keyboard, Vector<ObjetoGrafico> objetosGraficos) {
+    private Arma arma;
+    public P38(Keyboard keyboard, Vector<ObjetoGrafico> pendientesGraficos) {
         super("images/1984/p38.png", 350, 500);
         this.keyboard=keyboard;
-        this.objetosGraficos=objetosGraficos;
-        arma = new ArmaBase(objetosGraficos);
+        arma = new ArmaBase(pendientesGraficos);
     }
 
     @Override

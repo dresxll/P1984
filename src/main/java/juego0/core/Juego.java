@@ -40,9 +40,9 @@ public class Juego extends JGame {
 
     public void gameStartup() {
         try {
-            nivel = new Nivel1(objetosGraficos);
+            nivel = new Nivel1(pendientesGraficos);
             nivel.start();
-            p38 = new P38(keyboard, objetosGraficos);
+            p38 = new P38(keyboard, pendientesGraficos);
             System.out.println("gameStartup");
         } catch (Exception e) {
             System.out.println(e);
