@@ -1,15 +1,19 @@
 package juego0.enemigos;
 
-import java.awt.geom.Point2D;
-
-import juego0.principal.ObjetoGrafico;
+import juego0.core.ObjetoGrafico;
 
 public abstract class Enemigo extends ObjetoGrafico {
+    
     protected int energia;
-    protected Point2D.Double delta;
-    public Enemigo(String filename) {
-        super(filename);
+    public Enemigo(String filename, double positionX, double positionY) {
+        super(filename, positionX, positionY);
     }
-    public abstract void recibirDanio();
-    public abstract int getEnergia();
+    public void recibirDanio(int danio) {
+        energia -= danio;
+        if (energia<=0){
+            borrar=true;
+        }
+        
+        
+    }
 }

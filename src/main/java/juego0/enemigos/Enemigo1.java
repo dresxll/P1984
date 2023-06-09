@@ -1,28 +1,22 @@
 package juego0.enemigos;
 
-import java.awt.geom.Point2D;
+import java.util.Vector;
+
+import juego0.core.ObjetoGrafico;
 
 public class Enemigo1 extends Enemigo {
-    public Enemigo1(double x, double y) {
-        super("images/1984/enemigo1.png");
+    public Enemigo1(Vector<ObjetoGrafico> objetoGraficos, double x, double y) {
+        super("images/1984/enemigo1.png", x, y);
         setPosition(x, y);
-        delta = new Point2D.Double();
-        delta.setLocation(0, 2);
         energia = 1;
-
+        objetoGraficos.add(this);
     }
 
     @Override
     public void update() {
-        this.setPosition(positionX + (Math.sin(Math.toRadians(positionY))*2), positionY + delta.y);
+        this.setPosition(positionX + (Math.sin(Math.toRadians(positionY))*2), positionY + 2);
 
     }
 
-    public void recibirDanio() {
-        energia -= 1;
-    }
-
-    public int getEnergia() {
-        return energia;
-    }
+    
 }

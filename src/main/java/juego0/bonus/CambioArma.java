@@ -1,12 +1,9 @@
 package juego0.bonus;
 
-public class CambioArma {
-    
+public class CambioArma extends Bonus{
+
     public CambioArma(double x, double y) {
-
-        //super(null);
-        //this.setPosition(x, y);
+        super("images/1984/CambioArma.png", x, y);
     }
-
     
 }
