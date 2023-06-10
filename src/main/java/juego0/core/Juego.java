@@ -21,6 +21,7 @@ public class Juego extends JGame {
     private long diffMinutes;
     private LinkedList<KeyEvent> keyEvents;
     private Vector<ObjetoGrafico> objetosGraficos = new Vector<>();
+    private Vector<Explosion> explosiones = new Vector<>();
     private Vector<ObjetoGrafico> pendientesGraficos = new Vector<>();
     private Vector<ObjetoGrafico> limpiezGraficos = new Vector<>();
     private Keyboard keyboard = this.getKeyboard();
@@ -82,7 +83,7 @@ public class Juego extends JGame {
         g.setColor(Color.white);
         g.drawString("Tiempo de Juego: " + diffMinutes + ":" + diffSeconds, 12, 42);
         g.drawString("Tecla ESC = Fin del Juego ", 460, 42);
-        g.drawString("Energia: " + p38.getEnergia(),520,780);
+        g.drawString("Energia: " + p38.getEnergia(), 520, 780);
     }
 
     private void actualizarHora() {
@@ -96,6 +97,9 @@ public class Juego extends JGame {
     private void dibujarObjetosGraficos(Graphics2D g) {
         for (ObjetoGrafico objeto : objetosGraficos) {
             objeto.display(g);
+        }
+        for (Explosion explosion : explosiones) {
+            explosion.display(g);
         }
         p38.display(g);
     }
@@ -117,6 +121,9 @@ public class Juego extends JGame {
             }
 
         }
+        for (Explosion explosion : explosiones) {
+            explosion.update();
+        }
     }
 
     private void verificarObjetos() {
@@ -125,13 +132,22 @@ public class Juego extends JGame {
             if (objeto.getBorrar())
                 limpiezGraficos.add(objeto);
         }
+        for (Explosion explosion : explosiones) {
+            if (explosion.getBorrar())
+                limpiezGraficos.add(explosion);
+        }
     }
 
     private void borrarycargar() {
-        p38.update();
         for (ObjetoGrafico objeto : limpiezGraficos) {
-            if (objetosGraficos.contains(objeto))
+            if (objeto instanceof Explosion) {
+                explosiones.remove(objeto);
+            } else {
+                if (objeto instanceof Enemigo)
+                    explosiones.add(new Explosion(objeto.getX(), objeto.getY()));
                 objetosGraficos.remove(objeto);
+            }
+
         }
         limpiezGraficos.clear();
         for (ObjetoGrafico objeto : pendientesGraficos) {
@@ -174,7 +190,6 @@ public class Juego extends JGame {
             enemigo = (Enemigo1) objeto2;
             enemigo.recibirDanio(disparo.getDanio());
             disparo.setBorrar(true);
-            pendientesGraficos.add(new Explosion(objetosGraficos, objeto2.getX(), objeto2.getY()));
         }
         if (objeto2 instanceof Bonus) {
             Bonus bonus;
@@ -184,21 +199,22 @@ public class Juego extends JGame {
         }
     }
 
-    public void colisionar(P38 p38, ObjetoGrafico objeto2){
-        if ((objeto2 instanceof Enemigo)&&(!p38.invulnerable())){
+    public void colisionar(P38 p38, ObjetoGrafico objeto2) {
+        if ((objeto2 instanceof Enemigo) && (!p38.invulnerable())) {
             Enemigo enemigo = (Enemigo) objeto2;
             enemigo.recibirDanio(1);
             p38.recibirDanio(10);
         }
-        if ((objeto2 instanceof Disparo)){
-            objeto2.setBorrar(true);
-            p38.recibirDanio(5);
+        if ((objeto2 instanceof Disparo)) {
+         //   objeto2.setBorrar(true);
+         //   p38.recibirDanio(5);
         }
-        if ((objeto2 instanceof Bonus)){
-            Bonus bonus = (Bonus)objeto2;
+        if ((objeto2 instanceof Bonus)) {
+            Bonus bonus = (Bonus) objeto2;
             bonus.aplicar(p38);
         }
     }
+
     public Vector<ObjetoGrafico> getPendientesGraficos() {
         return pendientesGraficos;
     }

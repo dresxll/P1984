@@ -13,20 +13,22 @@ import com.entropyinteractive.Keyboard;
 
 import juego0.armas.Arma;
 import juego0.armas.ArmaBase;
+import juego0.bonus.Bonus;
 
 public class P38 extends ObjetoGrafico {
     private int energia = 100;
     private Keyboard keyboard;
+    private int shell = 0;
     private boolean interrumpirdisparo = false;
     private Arma arma;
-    private Date dAhora, dDanio, dUltimoBonus;
+    private Date dAhora, dDanio, dUltimoBonus, dUltimoDisparo=new Date();
     private BufferedImage p38Invulnerable = null;
     private Vector<ObjetoGrafico> pendientesGraficos;
 
     public P38(Keyboard keyboard, Vector<ObjetoGrafico> pendientesGraficos) {
         super("images/1984/p38.png", 275, 700);
         this.keyboard = keyboard;
-        this.pendientesGraficos=pendientesGraficos;
+        this.pendientesGraficos = pendientesGraficos;
         dAhora = new Date();
         arma = new ArmaBase(pendientesGraficos);
         try {
@@ -49,17 +51,33 @@ public class P38 extends ObjetoGrafico {
         if (keyboard.isKeyPressed(KeyEvent.VK_D) && (positionX < 536))
             positionX += 3;
         if (keyboard.isKeyPressed(KeyEvent.VK_X)) {
-            if (!interrumpirdisparo) {
-                arma.disparar(positionX + 23, positionY - (this.getHeight()));
-                interrumpirdisparo = true;
+            switch (shell) {
+                case 0:
+                    if (!interrumpirdisparo) {
+                        arma.disparar(positionX + 23, positionY - (this.getHeight()));
+                        interrumpirdisparo = true;
+                    }
+                break;
+                case 1:
+                if  (dAhora.getTime()-dUltimoDisparo.getTime()>200) {
+                    arma.disparar(positionX + 23, positionY - (this.getHeight()));
+                    dUltimoDisparo=new Date();
+                }
+                break;
+                case 2:
+                if  (dAhora.getTime()-dUltimoDisparo.getTime()>100) {
+                    arma.disparar(positionX + 23, positionY - (this.getHeight()));
+                    dUltimoDisparo=new Date();
+                }
+                break;
             }
+
         } else
             interrumpirdisparo = false;
         if (dUltimoBonus != null) {
-             if ((dAhora.getTime() - dUltimoBonus.getTime()) / 1000 % 60 > 3) {
-                arma = new ArmaBase(pendientesGraficos);
-                dUltimoBonus=null;
-             }
+            if ((dAhora.getTime() - dUltimoBonus.getTime()) / 1000 % 60 > 3) {
+                eliminarBonus();
+            }
         }
     }
 
@@ -81,8 +99,9 @@ public class P38 extends ObjetoGrafico {
     }
 
     public boolean invulnerable() {
-        if (dDanio != null) {return (dAhora.getTime() - dDanio.getTime()) / 1000 % 60 < 1;}
-        else
+        if (dDanio != null) {
+            return (dAhora.getTime() - dDanio.getTime()) / 1000 % 60 < 1;
+        } else
             return false;
     }
 
@@ -94,8 +113,22 @@ public class P38 extends ObjetoGrafico {
         this.dUltimoBonus = dUltimoBonus;
     }
 
+    public void eliminarBonus() {
+        arma = new ArmaBase(pendientesGraficos);
+        dUltimoBonus = null;
+        shell = 0;
+    }
+
+
     public Arma getArma() {
         return arma;
+    }
+
+    public void setShell(int shell){
+        this.shell = shell;
+    }
+    public int getShell(){
+        return shell;
     }
 
     @Override

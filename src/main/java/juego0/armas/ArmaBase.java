@@ -12,11 +12,19 @@ public class ArmaBase extends Arma {
 
     @Override
     public void disparar(double x, double y) {
-        if (rafaga == false)
+        switch(rafaga){
+            case 1:
+            pendientesGraficos.add(new DisparoBase(x, y+60));
+            break;
+            case 2:
+            pendientesGraficos.add(new DisparoBase(x, y+60));
             pendientesGraficos.add(new DisparoBase(x, y));
-        else {
-            pendientesGraficos.add(new DisparoBase(x, y + 30));
-            pendientesGraficos.add(new DisparoBase(x, y - 100));
+            break;
+            case 3:
+                        pendientesGraficos.add(new DisparoBase(x, y+60));
+            pendientesGraficos.add(new DisparoBase(x, y));
+            pendientesGraficos.add(new DisparoBase(x, y-60));
+            break;
         }
     }
 }

@@ -10,8 +10,8 @@ public class EstrellaNinja extends PowerUp{
 
     @Override
     public void aplicar(P38 p38) {
-        p38.recargarEnergia();
         super.aplicar(p38);
+        p38.recargarEnergia();
     }
     
 }

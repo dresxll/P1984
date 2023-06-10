@@ -10,7 +10,14 @@ public class SuperShell extends PowerUp {
 
     @Override
     public void aplicar(P38 p38) {
-        super.aplicar(p38);
+        if (p38.getShell() == 0) {
+            super.aplicar(p38);
+            p38.setShell(1);
+        } else {
+            super.aplicar(p38);
+            p38.setShell(2);
+        }
+
     }
 
 }

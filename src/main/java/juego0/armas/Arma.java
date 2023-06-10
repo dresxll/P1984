@@ -5,13 +5,17 @@ import java.util.Vector;
 import juego0.core.ObjetoGrafico;
 
 public abstract class Arma {
-    protected boolean rafaga = false;
+    protected int rafaga = 1;
     protected Vector<ObjetoGrafico> pendientesGraficos;
 
     public abstract void disparar(double x, double y);
 
-    public void setRafaga(boolean rafaga) {
+    public void setRafaga(int rafaga) {
         this.rafaga = rafaga;
+    }
+
+    public int getRafaga() {
+        return rafaga;
     }
 
 }

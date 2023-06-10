@@ -29,7 +29,7 @@ public class GeneradorBonus extends Thread {
     private Bonus bonusRandom() {
         Random random = new Random();
         int numeroRandom1;
-        numeroRandom1 = random.nextInt(9) + 1;
+        numeroRandom1 = random.nextInt(1) + 0;
         Bonus bonus = new Auto();
         switch (numeroRandom1) {
             case 1:
