@@ -21,7 +21,7 @@ public class ArmaBase extends Arma {
             pendientesGraficos.add(new DisparoBase(x, y));
             break;
             case 3:
-                        pendientesGraficos.add(new DisparoBase(x, y+60));
+            pendientesGraficos.add(new DisparoBase(x, y+60));
             pendientesGraficos.add(new DisparoBase(x, y));
             pendientesGraficos.add(new DisparoBase(x, y-60));
             break;

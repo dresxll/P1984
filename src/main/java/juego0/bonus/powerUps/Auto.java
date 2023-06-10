@@ -1,7 +1,5 @@
 package juego0.bonus.powerUps;
 
-import java.util.Date;
-
 import juego0.core.P38;
 
 public class Auto extends PowerUp {

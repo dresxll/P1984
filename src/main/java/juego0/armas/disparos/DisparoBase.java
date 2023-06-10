@@ -9,5 +9,5 @@ public class DisparoBase extends Disparo {
         this.alcance=750;
         this.danio=1;
     }
-
+    
 }
