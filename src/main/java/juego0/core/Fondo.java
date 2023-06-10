@@ -1,6 +1,4 @@
-package juego0.niveles;
-
-import juego0.core.ObjetoGrafico;
+package juego0.core;
 
 public class Fondo extends ObjetoGrafico {
 	public Fondo(String filename) {

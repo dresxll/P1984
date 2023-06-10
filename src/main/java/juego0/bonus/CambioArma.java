@@ -1,9 +1,14 @@
 package juego0.bonus;
 
-public class CambioArma extends Bonus{
+import java.util.Random;
 
-    public CambioArma(double x, double y) {
-        super("images/1984/CambioArma.png", x, y);
+public class CambioArma extends Bonus {
+    private int arma;
+
+    public CambioArma() {
+        super("images/1984/CambioArma.png");
+        Random random = new Random();
+        arma = random.nextInt(2)+1;
     }
-    
+
 }

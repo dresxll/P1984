@@ -7,8 +7,8 @@ import juego0.armas.disparos.Disparo;
 import juego0.bonus.Bonus;
 import juego0.enemigos.Enemigo;
 import juego0.enemigos.Enemigo1;
-import juego0.niveles.Nivel;
-import juego0.niveles.Nivel1;
+
+import juego0.niveles.NivelManager;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -25,7 +25,7 @@ public class Juego extends JGame {
     private Vector<ObjetoGrafico> limpiezGraficos = new Vector<>();
     private Keyboard keyboard = this.getKeyboard();
     private P38 p38;
-    private Nivel nivel;
+    private NivelManager nivelManager;
 
     public static void main(String[] args) {
         Juego juego = new Juego();
@@ -40,8 +40,7 @@ public class Juego extends JGame {
 
     public void gameStartup() {
         try {
-            nivel = new Nivel1(pendientesGraficos);
-            nivel.start();
+            nivelManager = new NivelManager(pendientesGraficos);
             p38 = new P38(keyboard, pendientesGraficos);
             System.out.println("gameStartup");
         } catch (Exception e) {
@@ -64,7 +63,7 @@ public class Juego extends JGame {
 
     public void gameDraw(Graphics2D g) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        nivel.getFondo().display(g);
+        nivelManager.getNivel().getFondo().display(g);
         dibujarHUD(g);
         dibujarObjetosGraficos(g);
     }
@@ -100,11 +99,12 @@ public class Juego extends JGame {
     }
 
     private void updateGeneral() {
-        nivel.getFondo().update();
+        nivelManager.getNivel().getFondo().update();
 
         p38.update();
         for (ObjetoGrafico objeto : objetosGraficos) {
             objeto.update();
+            if (!(objeto instanceof Explosion))
             for (ObjetoGrafico objeto2 : objetosGraficos) {
                 if ((objeto.getClass() != objeto2.getClass()) && (intersección(objeto, objeto2))) {
                     colisionar(objeto, objeto2);
@@ -175,5 +175,8 @@ public class Juego extends JGame {
             bonus.moverY(-20);
             disparo.setBorrar(true);
         }
+    }
+    public Vector<ObjetoGrafico> getPendientesGraficos() {
+        return pendientesGraficos;
     }
 }
