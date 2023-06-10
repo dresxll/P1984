@@ -8,7 +8,7 @@ public class Enemigo1 extends Enemigo {
     public Enemigo1(Vector<ObjetoGrafico> objetoGraficos, double x, double y) {
         super("images/1984/enemigo1.png", x, y);
         setPosition(x, y);
-        energia = 1;
+        energia = 2;
         objetoGraficos.add(this);
     }
 

@@ -17,9 +17,9 @@ public class GeneradorBonus extends Thread {
     public void run() {
         while (true) {
             try {
-                sleep(500);
+                sleep(50);
                 pendientesGraficos.add(bonusRandom());
-                sleep(1500);
+                sleep(150);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

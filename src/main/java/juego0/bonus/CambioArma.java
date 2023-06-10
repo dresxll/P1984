@@ -1,14 +1,22 @@
 package juego0.bonus;
 
-import java.util.Random;
+import juego0.core.P38;
+
+//import java.util.Random;
 
 public class CambioArma extends Bonus {
-    private int arma;
+    //private int arma;
 
     public CambioArma() {
         super("images/1984/CambioArma.png");
-        Random random = new Random();
-        arma = random.nextInt(2)+1;
+     //   Random random = new Random();
+     //   arma = random.nextInt(2)+1;
+    }
+
+    @Override
+    public void aplicar(P38 p38) {
+        this.borrar=true;
+
     }
 
 }

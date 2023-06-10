@@ -15,7 +15,7 @@ import java.awt.event.*;
 import java.util.*;
 
 public class Juego extends JGame {
-    private Date dInit = new Date(), dAhora;
+    private Date dInit = new Date(), dAhora = new Date();
     private long dateDiff;
     private long diffSeconds;
     private long diffMinutes;
@@ -82,6 +82,7 @@ public class Juego extends JGame {
         g.setColor(Color.white);
         g.drawString("Tiempo de Juego: " + diffMinutes + ":" + diffSeconds, 12, 42);
         g.drawString("Tecla ESC = Fin del Juego ", 460, 42);
+        g.drawString("Energia: " + p38.getEnergia(),520,780);
     }
 
     private void actualizarHora() {
@@ -89,6 +90,7 @@ public class Juego extends JGame {
         dateDiff = dAhora.getTime() - dInit.getTime();
         diffSeconds = dateDiff / 1000 % 60;
         diffMinutes = dateDiff / (60 * 1000) % 60;
+        p38.setDate();
     }
 
     private void dibujarObjetosGraficos(Graphics2D g) {
@@ -104,12 +106,16 @@ public class Juego extends JGame {
         p38.update();
         for (ObjetoGrafico objeto : objetosGraficos) {
             objeto.update();
-            if (!(objeto instanceof Explosion))
-            for (ObjetoGrafico objeto2 : objetosGraficos) {
-                if ((objeto.getClass() != objeto2.getClass()) && (intersección(objeto, objeto2))) {
-                    colisionar(objeto, objeto2);
+            if (!(objeto instanceof Explosion)) {
+                if (intersección(objeto, p38))
+                    colisionar(p38, objeto);
+                for (ObjetoGrafico objeto2 : objetosGraficos) {
+                    if ((objeto.getClass() != objeto2.getClass()) && (intersección(objeto, objeto2))) {
+                        colisionar(objeto, objeto2);
+                    }
                 }
             }
+
         }
     }
 
@@ -157,7 +163,8 @@ public class Juego extends JGame {
         String nombreClase = objeto.getClass().getSuperclass().getSimpleName();
         switch (nombreClase) {
             case "Disparo":
-                colisionar((Disparo)objeto, objeto2);
+                colisionar((Disparo) objeto, objeto2);
+                break;
         }
     }
 
@@ -174,6 +181,22 @@ public class Juego extends JGame {
             bonus = (Bonus) objeto2;
             bonus.moverY(-20);
             disparo.setBorrar(true);
+        }
+    }
+
+    public void colisionar(P38 p38, ObjetoGrafico objeto2){
+        if ((objeto2 instanceof Enemigo)&&(!p38.invulnerable())){
+            Enemigo enemigo = (Enemigo) objeto2;
+            enemigo.recibirDanio(1);
+            p38.recibirDanio(10);
+        }
+        if ((objeto2 instanceof Disparo)){
+            objeto2.setBorrar(true);
+            p38.recibirDanio(5);
+        }
+        if ((objeto2 instanceof Bonus)){
+            Bonus bonus = (Bonus)objeto2;
+            bonus.aplicar(p38);
         }
     }
     public Vector<ObjetoGrafico> getPendientesGraficos() {

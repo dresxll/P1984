@@ -1,5 +1,9 @@
 # P1984
 
+## Version 1.1
+
+Tenemos la colisión del p38 con los objetos graficos
+
 ## Version 1.0
 
 Arrancamos de 0 con una nueva lógica para los objetos gráficos
