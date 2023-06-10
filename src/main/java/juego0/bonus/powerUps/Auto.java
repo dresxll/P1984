@@ -10,8 +10,8 @@ public class Auto extends PowerUp{
 
     @Override
     public void aplicar(P38 p38) {
-                this.borrar=true;
-
+                p38.getArma().setRafaga(true);
+                super.aplicar(p38);
     }
     
 }

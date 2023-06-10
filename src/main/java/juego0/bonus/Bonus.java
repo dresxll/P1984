@@ -1,5 +1,6 @@
 package juego0.bonus;
 
+import java.util.Date;
 import java.util.Random;
 import juego0.core.ObjetoGrafico;
 import juego0.core.P38;
@@ -15,5 +16,9 @@ public abstract class Bonus extends ObjetoGrafico {
     public void update() {
         this.setPosition(positionX, positionY+2);
     }
-    public abstract void aplicar(P38 p38);
+    public void aplicar(P38 p38)
+    {
+        this.borrar=true;
+        p38.setdUltimoBonus(new Date());
+    }
 }

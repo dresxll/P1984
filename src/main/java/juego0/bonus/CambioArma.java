@@ -15,8 +15,7 @@ public class CambioArma extends Bonus {
 
     @Override
     public void aplicar(P38 p38) {
-        this.borrar=true;
-
+        super.aplicar(p38);
     }
 
 }

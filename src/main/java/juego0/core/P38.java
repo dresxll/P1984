@@ -19,14 +19,15 @@ public class P38 extends ObjetoGrafico {
     private Keyboard keyboard;
     private boolean interrumpirdisparo = false;
     private Arma arma;
-    private Date dAhora, dDanio;
+    private Date dAhora, dDanio, dUltimoBonus;
     private BufferedImage p38Invulnerable = null;
+    private Vector<ObjetoGrafico> pendientesGraficos;
 
     public P38(Keyboard keyboard, Vector<ObjetoGrafico> pendientesGraficos) {
         super("images/1984/p38.png", 275, 700);
         this.keyboard = keyboard;
+        this.pendientesGraficos=pendientesGraficos;
         dAhora = new Date();
-        dDanio = new Date();
         arma = new ArmaBase(pendientesGraficos);
         try {
             p38Invulnerable = ImageIO
@@ -54,6 +55,12 @@ public class P38 extends ObjetoGrafico {
             }
         } else
             interrumpirdisparo = false;
+        if (dUltimoBonus != null) {
+             if ((dAhora.getTime() - dUltimoBonus.getTime()) / 1000 % 60 > 3) {
+                arma = new ArmaBase(pendientesGraficos);
+                dUltimoBonus=null;
+             }
+        }
     }
 
     public int getEnergia() {
@@ -69,12 +76,26 @@ public class P38 extends ObjetoGrafico {
         energia = 100;
     }
 
+    public void recargarEnergia(int a) {
+        energia += a;
+    }
+
     public boolean invulnerable() {
-        return (dAhora.getTime() - dDanio.getTime()) / 1000 % 60 < 1;
+        if (dDanio != null) {return (dAhora.getTime() - dDanio.getTime()) / 1000 % 60 < 1;}
+        else
+            return false;
     }
 
     public void setDate() {
         dAhora = new Date();
+    }
+
+    public void setdUltimoBonus(Date dUltimoBonus) {
+        this.dUltimoBonus = dUltimoBonus;
+    }
+
+    public Arma getArma() {
+        return arma;
     }
 
     @Override

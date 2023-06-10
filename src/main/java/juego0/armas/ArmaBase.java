@@ -1,6 +1,5 @@
 package juego0.armas;
 
-
 import java.util.Vector;
 
 import juego0.armas.disparos.DisparoBase;
@@ -13,8 +12,11 @@ public class ArmaBase extends Arma {
 
     @Override
     public void disparar(double x, double y) {
-        pendientesGraficos.add(new DisparoBase(x, y));
+        if (rafaga == false)
+            pendientesGraficos.add(new DisparoBase(x, y));
+        else {
+            pendientesGraficos.add(new DisparoBase(x, y + 30));
+            pendientesGraficos.add(new DisparoBase(x, y - 100));
+        }
     }
-
-
 }
