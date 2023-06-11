@@ -1,5 +1,9 @@
 # P1984
 
+## Version 1.2
+
+Tenemos todos los bonus y la función de pause
+
 ## Version 1.1
 
 Tenemos la colisión del p38 con los objetos graficos
