@@ -22,4 +22,5 @@ public abstract class Bonus extends ObjetoGrafico {
         this.borrar = true;
         p38.setdUltimoBonus(new Date());
     }
+
 }

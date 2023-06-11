@@ -1,19 +1,21 @@
 package juego0.armas;
 
 
-import java.util.Vector;
-
-import juego0.armas.disparos.DisparoBase;
-import juego0.core.ObjetoGrafico;
+import juego0.armas.disparos.DisparoLaser;
 
 public class Laser extends Arma {
-    public Laser(Vector<ObjetoGrafico> pendientesGraficos) {
-        this.pendientesGraficos = pendientesGraficos;
+    int danio = 3;
+    public Laser() {
     }
 
     @Override
     public void disparar(double x, double y) {
-        pendientesGraficos.add(new DisparoBase(x, y));
+        pendientesGraficos.add(new DisparoLaser(danio,x, y));
+    }
+
+    @Override
+    public void mejorar() {
+        this.danio=6;
     }
 
 

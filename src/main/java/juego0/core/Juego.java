@@ -4,7 +4,9 @@ import com.entropyinteractive.*;
 
 import juego0.armas.Explosion;
 import juego0.armas.disparos.Disparo;
+import juego0.armas.disparos.DisparoLaser;
 import juego0.bonus.Bonus;
+import juego0.bonus.Refuerzo;
 import juego0.enemigos.Enemigo;
 import juego0.enemigos.Enemigo1;
 
@@ -27,6 +29,7 @@ public class Juego extends JGame {
     private Keyboard keyboard = this.getKeyboard();
     private P38 p38;
     private NivelManager nivelManager;
+    private boolean pause = false, flag = false;
 
     public static void main(String[] args) {
         Juego juego = new Juego();
@@ -54,19 +57,27 @@ public class Juego extends JGame {
     }
 
     public void gameUpdate(double delta) {
-        verificarObjetos();
-        borrarycargar();
-        keyEvents = keyboard.getEvents();
-        actualizarHora();
-        verificarCierre();
-        updateGeneral();
+        if (keyboard.isKeyPressed(KeyEvent.VK_SPACE) && !flag) {
+            pause = !pause;
+            flag = true;
+        } else if (!keyboard.isKeyPressed(KeyEvent.VK_SPACE))
+            flag = false;
+        if (!pause) {
+            verificarObjetos();
+            borrarycargar();
+            keyEvents = keyboard.getEvents();
+            actualizarHora();
+            verificarCierre();
+            updateGeneral();
+        }
+
     }
 
     public void gameDraw(Graphics2D g) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         nivelManager.getNivel().getFondo().display(g);
-        dibujarHUD(g);
         dibujarObjetosGraficos(g);
+        dibujarHUD(g);
     }
 
     private void verificarCierre() {
@@ -101,6 +112,8 @@ public class Juego extends JGame {
         for (Explosion explosion : explosiones) {
             explosion.display(g);
         }
+        for (Refuerzo refuerzo : p38.getRefuerzos())
+            refuerzo.display(g);
         p38.display(g);
     }
 
@@ -110,17 +123,19 @@ public class Juego extends JGame {
         p38.update();
         for (ObjetoGrafico objeto : objetosGraficos) {
             objeto.update();
-            if (!(objeto instanceof Explosion)) {
-                if (intersección(objeto, p38))
-                    colisionar(p38, objeto);
-                for (ObjetoGrafico objeto2 : objetosGraficos) {
-                    if ((objeto.getClass() != objeto2.getClass()) && (intersección(objeto, objeto2))) {
-                        colisionar(objeto, objeto2);
-                    }
+            for (Refuerzo refuerzo : p38.getRefuerzos()) {
+                if (objeto instanceof Enemigo && (intersección(refuerzo, objeto)))
+                    colisionar(refuerzo, (Enemigo) objeto);
+            }
+            if (intersección(objeto, p38))
+                colisionar(p38, objeto);
+            for (ObjetoGrafico objeto2 : objetosGraficos) {
+                if ((objeto.getClass() != objeto2.getClass()) && (intersección(objeto, objeto2))) {
+                    colisionar(objeto, objeto2);
                 }
             }
-
         }
+
         for (Explosion explosion : explosiones) {
             explosion.update();
         }
@@ -136,6 +151,10 @@ public class Juego extends JGame {
             if (explosion.getBorrar())
                 limpiezGraficos.add(explosion);
         }
+        for (Refuerzo refuerzo : p38.getRefuerzos()) {
+            if (refuerzo.getBorrar())
+                limpiezGraficos.add(refuerzo);
+        }
     }
 
     private void borrarycargar() {
@@ -146,6 +165,10 @@ public class Juego extends JGame {
                 if (objeto instanceof Enemigo)
                     explosiones.add(new Explosion(objeto.getX(), objeto.getY()));
                 objetosGraficos.remove(objeto);
+            }
+            if (objeto instanceof Refuerzo) {
+                explosiones.add(new Explosion(objeto.getX(), objeto.getY()));
+                p38.getRefuerzos().remove(objeto);
             }
 
         }
@@ -189,14 +212,14 @@ public class Juego extends JGame {
             Enemigo1 enemigo;
             enemigo = (Enemigo1) objeto2;
             enemigo.recibirDanio(disparo.getDanio());
-            disparo.setBorrar(true);
-        }
-        if (objeto2 instanceof Bonus) {
+        } else if (objeto2 instanceof Bonus) {
             Bonus bonus;
             bonus = (Bonus) objeto2;
             bonus.moverY(-20);
-            disparo.setBorrar(true);
+
         }
+        if (!(disparo instanceof DisparoLaser))
+            disparo.setBorrar(true);
     }
 
     public void colisionar(P38 p38, ObjetoGrafico objeto2) {
@@ -206,13 +229,19 @@ public class Juego extends JGame {
             p38.recibirDanio(10);
         }
         if ((objeto2 instanceof Disparo)) {
-         //   objeto2.setBorrar(true);
-         //   p38.recibirDanio(5);
+            // objeto2.setBorrar(true);
+            // p38.recibirDanio(5);
         }
         if ((objeto2 instanceof Bonus)) {
             Bonus bonus = (Bonus) objeto2;
             bonus.aplicar(p38);
         }
+    }
+
+    public void colisionar(Refuerzo refuerzo, Enemigo enemigo) {
+
+        refuerzo.setBorrar(true);
+        enemigo.recibirDanio(1);
     }
 
     public Vector<ObjetoGrafico> getPendientesGraficos() {

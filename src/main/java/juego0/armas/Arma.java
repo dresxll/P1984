@@ -17,5 +17,9 @@ public abstract class Arma {
     public int getRafaga() {
         return rafaga;
     }
+    public void setPendienteGraficos(Vector<ObjetoGrafico> pendienteGraficos){
+        this.pendientesGraficos=pendienteGraficos;
+    }
+    public abstract void mejorar();
 
 }

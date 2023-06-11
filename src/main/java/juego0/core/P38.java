@@ -11,26 +11,25 @@ import javax.imageio.ImageIO;
 
 import com.entropyinteractive.Keyboard;
 
-import juego0.armas.Arma;
-import juego0.armas.ArmaBase;
-import juego0.bonus.Bonus;
+import juego0.armas.*;
+import juego0.bonus.Refuerzo;
 
 public class P38 extends ObjetoGrafico {
     private int energia = 100;
     private Keyboard keyboard;
     private int shell = 0;
-    private boolean interrumpirdisparo = false;
-    private Arma arma;
-    private Date dAhora, dDanio, dUltimoBonus, dUltimoDisparo=new Date();
+    private boolean interrumpirdisparo = false, interrumpirdisparo2 = false;
+    private Arma arma = new ArmaBase();
+    private Date dAhora = new Date(), dDanio, dUltimoBonus, dUltimoDisparo = new Date();
     private BufferedImage p38Invulnerable = null;
     private Vector<ObjetoGrafico> pendientesGraficos;
+    private Vector<Refuerzo> refuerzos = new Vector<>();
 
     public P38(Keyboard keyboard, Vector<ObjetoGrafico> pendientesGraficos) {
         super("images/1984/p38.png", 275, 700);
         this.keyboard = keyboard;
         this.pendientesGraficos = pendientesGraficos;
-        dAhora = new Date();
-        arma = new ArmaBase(pendientesGraficos);
+        arma.setPendienteGraficos(pendientesGraficos);
         try {
             p38Invulnerable = ImageIO
                     .read(getClass().getClassLoader().getResourceAsStream("images/1984/Invulnerable.png"));
@@ -57,27 +56,41 @@ public class P38 extends ObjetoGrafico {
                         arma.disparar(positionX + 23, positionY - (this.getHeight()));
                         interrumpirdisparo = true;
                     }
-                break;
+                    break;
                 case 1:
-                if  (dAhora.getTime()-dUltimoDisparo.getTime()>200) {
-                    arma.disparar(positionX + 23, positionY - (this.getHeight()));
-                    dUltimoDisparo=new Date();
-                }
-                break;
+                    if (dAhora.getTime() - dUltimoDisparo.getTime() > 200) {
+                        arma.disparar(positionX + 23, positionY - (this.getHeight()));
+                        dUltimoDisparo = new Date();
+                    }
+                    break;
                 case 2:
-                if  (dAhora.getTime()-dUltimoDisparo.getTime()>100) {
-                    arma.disparar(positionX + 23, positionY - (this.getHeight()));
-                    dUltimoDisparo=new Date();
-                }
-                break;
+                    if (dAhora.getTime() - dUltimoDisparo.getTime() > 100) {
+                        arma.disparar(positionX + 23, positionY - (this.getHeight()));
+                        dUltimoDisparo = new Date();
+                    }
+                    break;
             }
-
-        } else
+            if (!interrumpirdisparo2) {
+                for (Refuerzo refuerzo : refuerzos) {
+                    pendientesGraficos.add(refuerzo.disparar());
+                }
+                interrumpirdisparo2 = true;
+            }
+        } else {
             interrumpirdisparo = false;
+            interrumpirdisparo2 = false;
+        }
+
         if (dUltimoBonus != null) {
             if ((dAhora.getTime() - dUltimoBonus.getTime()) / 1000 % 60 > 3) {
                 eliminarBonus();
             }
+        }
+        for (Refuerzo refuerzo : refuerzos) {
+            if (refuerzo.getIz())
+                refuerzo.setPosition(positionX - 50, positionY + 10);
+            else
+                refuerzo.setPosition(positionX + 82, positionY + 10);
         }
     }
 
@@ -114,21 +127,30 @@ public class P38 extends ObjetoGrafico {
     }
 
     public void eliminarBonus() {
-        arma = new ArmaBase(pendientesGraficos);
+        arma = new ArmaBase();
+        arma.setPendienteGraficos(pendientesGraficos);
         dUltimoBonus = null;
         shell = 0;
     }
-
 
     public Arma getArma() {
         return arma;
     }
 
-    public void setShell(int shell){
+    public void setArma(Arma arma) {
+        this.arma = arma;
+    }
+
+    public void setShell(int shell) {
         this.shell = shell;
     }
-    public int getShell(){
+
+    public int getShell() {
         return shell;
+    }
+
+    public Vector<ObjetoGrafico> getPendientesGraficos() {
+        return pendientesGraficos;
     }
 
     @Override
@@ -137,6 +159,16 @@ public class P38 extends ObjetoGrafico {
             g2.drawImage(p38Invulnerable, (int) this.positionX, (int) this.positionY, null);
         else
             g2.drawImage(imagen, (int) this.positionX, (int) this.positionY, null);
+    }
+
+    public void setRefuerzos(int danio) {
+        refuerzos.clear();
+        refuerzos.add(new Refuerzo(true, 1, this.getX() - 50, this.getY() + 10));
+        refuerzos.add(new Refuerzo(false, 1, this.getX() + 82, this.getY() + 10));
+    }
+
+    public Vector<Refuerzo> getRefuerzos() {
+        return refuerzos;
 
     }
 
