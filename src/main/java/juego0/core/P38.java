@@ -12,13 +12,14 @@ import javax.imageio.ImageIO;
 import com.entropyinteractive.Keyboard;
 
 import juego0.armas.*;
+import juego0.ataquesEspeciales.*;
 import juego0.bonus.Refuerzo;
 
 public class P38 extends ObjetoGrafico {
     private int energia = 100;
     private Keyboard keyboard;
     private int shell = 0;
-    private boolean interrumpirdisparo = false, interrumpirdisparo2 = false;
+    private boolean interrumpirdisparo = false, interrumpirdisparo2 = false, interrumpirataque = false;
     private Arma arma = new Ametralladora();
     private Date dAhora = new Date(), dDanio, dUltimoBonus, dUltimoDisparo = new Date();
     private BufferedImage p38Invulnerable = null;
@@ -41,6 +42,14 @@ public class P38 extends ObjetoGrafico {
 
     @Override
     public void update() {
+        if (keyboard.isKeyPressed(KeyEvent.VK_Z) && energia > 20) {
+            if (!interrumpirataque) {
+                pendientesGraficos.add(new Tsunami());
+                interrumpirataque = true;
+                energia-=20;
+            }
+        } else
+            interrumpirataque = false;
         if (keyboard.isKeyPressed(KeyEvent.VK_W) && positionY > 30)
             positionY -= 3;
         if (keyboard.isKeyPressed(KeyEvent.VK_S) && positionY < 756)

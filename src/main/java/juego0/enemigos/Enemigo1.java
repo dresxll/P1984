@@ -10,6 +10,7 @@ public class Enemigo1 extends Enemigo {
         setPosition(x, y);
         energia = 2;
         objetoGraficos.add(this);
+        chico = true;
     }
 
     @Override

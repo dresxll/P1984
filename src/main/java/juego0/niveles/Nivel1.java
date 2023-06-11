@@ -17,7 +17,7 @@ public class Nivel1 extends Nivel {
     @Override
     public void run() {
         
-        while (this.diffSeconds[0] < 5) {
+        while (this.diffSeconds[0] < 1) {
             try {
                 sleep(20);
             } catch (InterruptedException e) {

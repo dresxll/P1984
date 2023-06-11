@@ -4,6 +4,9 @@ import com.entropyinteractive.*;
 
 import juego0.armas.Explosion;
 import juego0.armas.disparos.*;
+import juego0.ataquesEspeciales.AtaqueEspecial;
+import juego0.ataquesEspeciales.Relampago;
+import juego0.ataquesEspeciales.Tsunami;
 import juego0.bonus.*;
 import juego0.bonus.powerUps.*;
 import juego0.enemigos.*;
@@ -17,7 +20,7 @@ public class Juego extends JGame {
     private Date dInit = new Date(), dAhora = new Date();
     private Date dPausado;
     private long dateDiff;
-    private long[]  diffSeconds = {0};
+    private long[] diffSeconds = { 0 };
     private long diffMinutes;
     private long tiempoPausado = 0, acumPause = 0;
     private LinkedList<KeyEvent> keyEvents;
@@ -28,7 +31,7 @@ public class Juego extends JGame {
     private Keyboard keyboard = this.getKeyboard();
     private P38 p38;
     private NivelManager nivelManager;
-    private boolean pause = false, flag = false;
+    private boolean pause = false, flag = false, hayTsunami = false;
 
     public static void main(String[] args) {
         Juego juego = new Juego();
@@ -60,8 +63,6 @@ public class Juego extends JGame {
         if (keyboard.isKeyPressed(KeyEvent.VK_SPACE) && !flag) {
             pause = !pause;
             flag = true;
-            // if (nivelManager.getNivel().isInterrupted())nivelManager.reanudarNivel();
-            // nivelManager.pausa();
         } else if (!keyboard.isKeyPressed(KeyEvent.VK_SPACE))
             flag = false;
         if (!pause) {
@@ -96,7 +97,7 @@ public class Juego extends JGame {
         g.drawString("Tiempo de Juego: " + diffMinutes + ":" + diffSeconds[0], 12, 42);
         g.drawString("Tecla ESC = Fin del Juego ", 460, 42);
         g.drawString("Energia: " + p38.getEnergia(), 520, 780);
-         g.setColor(Color.white);
+        g.setColor(Color.white);
     }
 
     private void actualizarHora(boolean pause) {
@@ -131,27 +132,51 @@ public class Juego extends JGame {
     }
 
     private void updateGeneral() {
-        nivelManager.getNivel().getFondo().update();
-
+        hayTsunami = false;
         p38.update();
         for (ObjetoGrafico objeto : objetosGraficos) {
             objeto.update();
-            for (Refuerzo refuerzo : p38.getRefuerzos()) {
-                if (objeto instanceof Enemigo && (intersección(refuerzo, objeto)))
-                    colisionar(refuerzo, (Enemigo) objeto);
-            }
-            if (intersección(objeto, p38))
-                colisionar(p38, objeto);
-            for (ObjetoGrafico objeto2 : objetosGraficos) {
-                if ((objeto.getClass() != objeto2.getClass()) && (intersección(objeto, objeto2))) {
-                    colisionar(objeto, objeto2);
+            if (objeto instanceof AtaqueEspecial) {
+                aplicarAtaque((AtaqueEspecial) objeto);
+            } else {
+                for (Refuerzo refuerzo : p38.getRefuerzos()) {
+                    if (objeto instanceof Enemigo && (intersección(refuerzo, objeto)))
+                        colisionar(refuerzo, (Enemigo) objeto);
+                }
+                if (intersección(objeto, p38))
+                    colisionar(p38, objeto);
+                for (ObjetoGrafico objeto2 : objetosGraficos) {
+                    if ((objeto.getClass() != objeto2.getClass()) && (intersección(objeto, objeto2))) {
+                        colisionar(objeto, objeto2);
+                    }
                 }
             }
-        }
 
+        }
+        if (!hayTsunami)
+            nivelManager.getNivel().getFondo().update();
         for (Explosion explosion : explosiones) {
             explosion.update();
         }
+    }
+
+    private void aplicarAtaque(AtaqueEspecial ataqueEspecial) {
+        if (ataqueEspecial instanceof Relampago) {
+                    Relampago relampago = (Relampago) ataqueEspecial;
+                    relampago.aplicar(objetosGraficos);
+                } else if (ataqueEspecial instanceof Tsunami) {
+                    hayTsunami = true;
+                    Tsunami tsunami = (Tsunami) ataqueEspecial;
+                    for (ObjetoGrafico objeto2 : objetosGraficos) {
+                        if (objeto2 instanceof Enemigo) {
+                            Enemigo enemigo = (Enemigo) objeto2;
+                            if (enemigo.getChico() && !tsunami.getAfectados().contains(enemigo) && intersección(tsunami, enemigo)) {
+                                tsunami.getAfectados().add(enemigo);
+                                enemigo.borrar = true;
+                            }
+                        }
+                    }
+                }
     }
 
     private void verificarObjetos() {
@@ -209,6 +234,10 @@ public class Juego extends JGame {
                 (ah < ay || ah > by) &&
                 (bw < bx || bw > ax) &&
                 (bh < by || bh > ay));
+    }
+    
+    public static boolean intersección(Tsunami tsunami, ObjetoGrafico b) {
+        return((b.getX()>tsunami.getX()+tsunami.desplazamiento()+600)&&(b.getY()>1000+tsunami.desplazamiento()));
     }
 
     public void colisionar(ObjetoGrafico objeto, ObjetoGrafico objeto2) {
@@ -295,7 +324,7 @@ public class Juego extends JGame {
         return pause;
     }
 
-    public long[] getSec(){
+    public long[] getSec() {
         return diffSeconds;
     }
 }
