@@ -1,5 +1,9 @@
 # P1984
 
+## Version 1.3
+
+Tenemos casi todo lo de los ataques especiales, falta implementar con los buques
+
 ## Version 1.2
 
 Tenemos todos los bonus y la función de pause
