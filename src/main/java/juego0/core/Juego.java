@@ -162,21 +162,22 @@ public class Juego extends JGame {
 
     private void aplicarAtaque(AtaqueEspecial ataqueEspecial) {
         if (ataqueEspecial instanceof Relampago) {
-                    Relampago relampago = (Relampago) ataqueEspecial;
-                    relampago.aplicar(objetosGraficos);
-                } else if (ataqueEspecial instanceof Tsunami) {
-                    hayTsunami = true;
-                    Tsunami tsunami = (Tsunami) ataqueEspecial;
-                    for (ObjetoGrafico objeto2 : objetosGraficos) {
-                        if (objeto2 instanceof Enemigo) {
-                            Enemigo enemigo = (Enemigo) objeto2;
-                            if (enemigo.getChico() && !tsunami.getAfectados().contains(enemigo) && intersección(tsunami, enemigo)) {
-                                tsunami.getAfectados().add(enemigo);
-                                enemigo.borrar = true;
-                            }
-                        }
+            Relampago relampago = (Relampago) ataqueEspecial;
+            relampago.aplicar(objetosGraficos);
+        } else if (ataqueEspecial instanceof Tsunami) {
+            hayTsunami = true;
+            Tsunami tsunami = (Tsunami) ataqueEspecial;
+            for (ObjetoGrafico objeto2 : objetosGraficos) {
+                if (objeto2 instanceof Enemigo) {
+                    Enemigo enemigo = (Enemigo) objeto2;
+                    if (enemigo.getChico() && !tsunami.getAfectados().contains(enemigo)
+                            && intersección(tsunami, enemigo)) {
+                        tsunami.getAfectados().add(enemigo);
+                        enemigo.borrar = true;
                     }
                 }
+            }
+        }
     }
 
     private void verificarObjetos() {
@@ -235,9 +236,10 @@ public class Juego extends JGame {
                 (bw < bx || bw > ax) &&
                 (bh < by || bh > ay));
     }
-    
+
     public static boolean intersección(Tsunami tsunami, ObjetoGrafico b) {
-        return((b.getX()>tsunami.getX()+tsunami.desplazamiento()+600)&&(b.getY()>1000+tsunami.desplazamiento()));
+        return ((b.getX() > tsunami.getX() + tsunami.desplazamiento() + 600)
+                && (b.getY() > 1000 + tsunami.desplazamiento()));
     }
 
     public void colisionar(ObjetoGrafico objeto, ObjetoGrafico objeto2) {
@@ -262,7 +264,7 @@ public class Juego extends JGame {
                 pendientesGraficos.add(bonusRandom(bonus.getX(), bonus.getY() - 40));
             }
         }
-        if (!(disparo instanceof DisparoLaser))
+        if (!(disparo instanceof DisparoLaser) && (!(objeto2 instanceof Disparo)) && (!(objeto2 instanceof AtaqueEspecial)))
             disparo.setBorrar(true);
     }
 
