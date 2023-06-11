@@ -13,8 +13,10 @@ public class ObtenerRefuerzos extends Bonus {
         if (p38.getRefuerzos().isEmpty()) {
             this.setBorrar(true);
             p38.setRefuerzos(1);
-        } else
+        } else {
+            this.setBorrar(true);
             p38.setRefuerzos(2);
+        }
 
     }
 

@@ -3,13 +3,10 @@ package juego0.core;
 import com.entropyinteractive.*;
 
 import juego0.armas.Explosion;
-import juego0.armas.disparos.Disparo;
-import juego0.armas.disparos.DisparoLaser;
-import juego0.bonus.Bonus;
-import juego0.bonus.Refuerzo;
-import juego0.enemigos.Enemigo;
-import juego0.enemigos.Enemigo1;
-
+import juego0.armas.disparos.*;
+import juego0.bonus.*;
+import juego0.bonus.powerUps.*;
+import juego0.enemigos.*;
 import juego0.niveles.NivelManager;
 
 import java.awt.*;
@@ -18,9 +15,11 @@ import java.util.*;
 
 public class Juego extends JGame {
     private Date dInit = new Date(), dAhora = new Date();
+    private Date dPausado;
     private long dateDiff;
-    private long diffSeconds;
+    private long[]  diffSeconds = {0};
     private long diffMinutes;
+    private long tiempoPausado = 0, acumPause = 0;
     private LinkedList<KeyEvent> keyEvents;
     private Vector<ObjetoGrafico> objetosGraficos = new Vector<>();
     private Vector<Explosion> explosiones = new Vector<>();
@@ -44,7 +43,7 @@ public class Juego extends JGame {
 
     public void gameStartup() {
         try {
-            nivelManager = new NivelManager(pendientesGraficos);
+            nivelManager = new NivelManager(this);
             p38 = new P38(keyboard, pendientesGraficos);
             System.out.println("gameStartup");
         } catch (Exception e) {
@@ -57,20 +56,22 @@ public class Juego extends JGame {
     }
 
     public void gameUpdate(double delta) {
+        actualizarHora(pause);
         if (keyboard.isKeyPressed(KeyEvent.VK_SPACE) && !flag) {
             pause = !pause;
             flag = true;
+            // if (nivelManager.getNivel().isInterrupted())nivelManager.reanudarNivel();
+            // nivelManager.pausa();
         } else if (!keyboard.isKeyPressed(KeyEvent.VK_SPACE))
             flag = false;
         if (!pause) {
             verificarObjetos();
             borrarycargar();
             keyEvents = keyboard.getEvents();
-            actualizarHora();
             verificarCierre();
             updateGeneral();
+        } else {
         }
-
     }
 
     public void gameDraw(Graphics2D g) {
@@ -92,17 +93,29 @@ public class Juego extends JGame {
 
     private void dibujarHUD(Graphics2D g) {
         g.setColor(Color.white);
-        g.drawString("Tiempo de Juego: " + diffMinutes + ":" + diffSeconds, 12, 42);
+        g.drawString("Tiempo de Juego: " + diffMinutes + ":" + diffSeconds[0], 12, 42);
         g.drawString("Tecla ESC = Fin del Juego ", 460, 42);
         g.drawString("Energia: " + p38.getEnergia(), 520, 780);
+         g.setColor(Color.white);
     }
 
-    private void actualizarHora() {
-        dAhora = new Date();
-        dateDiff = dAhora.getTime() - dInit.getTime();
-        diffSeconds = dateDiff / 1000 % 60;
-        diffMinutes = dateDiff / (60 * 1000) % 60;
-        p38.setDate();
+    private void actualizarHora(boolean pause) {
+        if (pause) {
+            if (dPausado == null)
+                dPausado = new Date();
+            dAhora = new Date();
+            tiempoPausado = dAhora.getTime() - dPausado.getTime();
+        } else {
+            dPausado = null;
+            dAhora = new Date();
+            acumPause += tiempoPausado;
+            tiempoPausado = 0;
+            dateDiff = dAhora.getTime() - dInit.getTime() - acumPause;
+            diffSeconds[0] = dateDiff / 1000 % 60;
+            diffMinutes = dateDiff / (60 * 1000) % 60;
+            p38.setDate();
+        }
+
     }
 
     private void dibujarObjetosGraficos(Graphics2D g) {
@@ -215,8 +228,10 @@ public class Juego extends JGame {
         } else if (objeto2 instanceof Bonus) {
             Bonus bonus;
             bonus = (Bonus) objeto2;
-            bonus.moverY(-20);
-
+            bonus.recibirDisparo();
+            if (bonus.getCount() >= 3) {
+                pendientesGraficos.add(bonusRandom(bonus.getX(), bonus.getY() - 40));
+            }
         }
         if (!(disparo instanceof DisparoLaser))
             disparo.setBorrar(true);
@@ -246,5 +261,41 @@ public class Juego extends JGame {
 
     public Vector<ObjetoGrafico> getPendientesGraficos() {
         return pendientesGraficos;
+    }
+
+    private Bonus bonusRandom(double x, double y) {
+        Random random = new Random();
+        int numeroRandom1;
+        numeroRandom1 = random.nextInt(7) + 1;
+        Bonus bonus = new Auto();
+        switch (numeroRandom1) {
+            case 1:
+                bonus = new Auto();
+            case 2:
+                bonus = new EstrellaNinja();
+                break;
+            case 3:
+                bonus = new POW();
+                break;
+            case 4:
+                bonus = new SuperShell();
+                break;
+            case 5:
+                bonus = new CambioArma();
+                break;
+            case 6:
+                bonus = new ObtenerRefuerzos();
+                break;
+        }
+        bonus.setPosition(x, y);
+        return bonus;
+    }
+
+    public Boolean getPause() {
+        return pause;
+    }
+
+    public long[] getSec(){
+        return diffSeconds;
     }
 }

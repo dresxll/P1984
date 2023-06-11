@@ -1,23 +1,21 @@
 package juego0.niveles;
 
-import java.util.Vector;
 
-import juego0.core.ObjetoGrafico;
+import juego0.core.Juego;
 
 public class NivelManager {
     private Nivel nivel;
+    //private Juego juego;
     private GeneradorBonus generadorBonus;
-    //private Vector<ObjetoGrafico> pendientesGraficos;
-
-    public NivelManager(Vector<ObjetoGrafico> pendientesGraficos) {
-    //    this.pendientesGraficos = pendientesGraficos;
-        generadorBonus = new GeneradorBonus(pendientesGraficos);
-        nivel = new Nivel1(pendientesGraficos);
+    public NivelManager(Juego juego) {
+        //this.juego = juego;
+        generadorBonus = new GeneradorBonus(juego.getPendientesGraficos(),juego.getSec());
+        nivel = new Nivel1(juego.getPendientesGraficos(),juego.getSec());
         nivel.start();
-        generadorBonus.start();
-    }
+        generadorBonus.start();    }
 
     public Nivel getNivel() {
         return nivel;
     }
+
 }

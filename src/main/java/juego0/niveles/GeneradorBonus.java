@@ -8,46 +8,49 @@ import juego0.bonus.powerUps.*;
 import juego0.core.ObjetoGrafico;
 
 public class GeneradorBonus extends Thread {
+    private Random random = new Random();
     private Vector<ObjetoGrafico> pendientesGraficos;
+    private long[] diffSeconds = { 0 };
+    private long diffSeconds2;
+    private int numero = random.nextInt(20) + 1;
 
-    public GeneradorBonus(Vector<ObjetoGrafico> pendientesGraficos) {
+    public GeneradorBonus(Vector<ObjetoGrafico> pendientesGraficos, long[] diffSeconds) {
         this.pendientesGraficos = pendientesGraficos;
+        this.diffSeconds = diffSeconds;
     }
 
     public void run() {
         while (true) {
-            try {
-                sleep(50);
+            diffSeconds2 = diffSeconds[0];
+            while (diffSeconds2 > 20){diffSeconds2 -= 20;}
+            if (diffSeconds2 == numero) {
                 pendientesGraficos.add(bonusRandom());
-                sleep(150);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                numero = random.nextInt(5) + 1;
             }
         }
     }
 
     private Bonus bonusRandom() {
-        Random random = new Random();
         int numeroRandom1;
-        numeroRandom1 = random.nextInt(1)+6;
+        numeroRandom1 = random.nextInt(7) + 1;
         Bonus bonus = new Auto();
         switch (numeroRandom1) {
             case 1:
-            bonus = new Auto();
+                bonus = new Auto();
             case 2:
-            bonus = new EstrellaNinja();
+                bonus = new EstrellaNinja();
                 break;
             case 3:
-            bonus = new POW();
+                bonus = new POW();
                 break;
             case 4:
-            bonus = new SuperShell();
+                bonus = new SuperShell();
                 break;
             case 5:
-            bonus = new CambioArma();
+                bonus = new CambioArma();
                 break;
             case 6:
-            bonus = new ObtenerRefuerzos();
+                bonus = new ObtenerRefuerzos();
                 break;
         }
         return bonus;

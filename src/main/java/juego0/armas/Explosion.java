@@ -13,7 +13,7 @@ public class Explosion extends ObjetoGrafico {
 
     @Override
     public void update() {
-        estado += 0.2;
+        estado += 0.5;
         if (estado < 5) {
             this.setImagen("images/1984/explosion" + (int) estado + ".png");
         } else this.borrar=true;

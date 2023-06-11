@@ -19,7 +19,7 @@ public class P38 extends ObjetoGrafico {
     private Keyboard keyboard;
     private int shell = 0;
     private boolean interrumpirdisparo = false, interrumpirdisparo2 = false;
-    private Arma arma = new ArmaBase();
+    private Arma arma = new Ametralladora();
     private Date dAhora = new Date(), dDanio, dUltimoBonus, dUltimoDisparo = new Date();
     private BufferedImage p38Invulnerable = null;
     private Vector<ObjetoGrafico> pendientesGraficos;
@@ -82,7 +82,7 @@ public class P38 extends ObjetoGrafico {
         }
 
         if (dUltimoBonus != null) {
-            if ((dAhora.getTime() - dUltimoBonus.getTime()) / 1000 % 60 > 3) {
+            if ((dAhora.getTime() - dUltimoBonus.getTime()) / 1000 % 60 > 6) {
                 eliminarBonus();
             }
         }
