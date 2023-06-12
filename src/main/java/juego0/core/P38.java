@@ -16,7 +16,7 @@ import juego0.ataquesEspeciales.*;
 import juego0.bonus.Refuerzo;
 
 public class P38 extends ObjetoGrafico {
-    private int energia = 100;
+    private int energia = 10;
     private Keyboard keyboard;
     private int shell = 0;
     private boolean interrumpirdisparo = false, interrumpirdisparo2 = false, interrumpirataque = false;

@@ -12,7 +12,7 @@ public class GeneradorBonus extends Thread {
     private Vector<ObjetoGrafico> pendientesGraficos;
     private long[] diffSeconds = { 0 };
     private long diffSeconds2;
-    private int numero = random.nextInt(20) + 1;
+    private int numero = random.nextInt(5) + 1;
 
     public GeneradorBonus(Vector<ObjetoGrafico> pendientesGraficos, long[] diffSeconds) {
         this.pendientesGraficos = pendientesGraficos;
@@ -22,7 +22,7 @@ public class GeneradorBonus extends Thread {
     public void run() {
         while (true) {
             diffSeconds2 = diffSeconds[0];
-            while (diffSeconds2 > 20){diffSeconds2 -= 20;}
+            while (diffSeconds2 > 5){diffSeconds2 -= 5;}
             if (diffSeconds2 == numero) {
                 pendientesGraficos.add(bonusRandom());
                 numero = random.nextInt(5) + 1;

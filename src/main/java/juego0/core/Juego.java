@@ -11,8 +11,10 @@ import juego0.bonus.*;
 import juego0.bonus.powerUps.*;
 import juego0.enemigos.*;
 import juego0.niveles.GameOver;
+import juego0.niveles.GeneradorBonus;
+import juego0.niveles.Nivel;
 import juego0.niveles.Nivel0;
-import juego0.niveles.NivelManager;
+import juego0.niveles.Nivel1;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -25,14 +27,16 @@ public class Juego extends JGame {
     private long[] diffSeconds = { 0 };
     private long diffMinutes;
     private long tiempoPausado = 0, acumPause = 0;
-    private LinkedList<KeyEvent> keyEvents;
     private Vector<ObjetoGrafico> objetosGraficos = new Vector<>();
     private Vector<Explosion> explosiones = new Vector<>();
     private Vector<ObjetoGrafico> pendientesGraficos = new Vector<>();
     private Vector<ObjetoGrafico> limpiezGraficos = new Vector<>();
     private Keyboard keyboard = this.getKeyboard();
     private P38 p38;
-    private NivelManager nivelManager;
+    private Nivel nivelactual;
+    private GeneradorBonus generadorBonus;
+    private int indexNivel = 0;
+
     private boolean pause = false, flag = false, hayTsunami = false;
 
     public static void main(String[] args) {
@@ -48,8 +52,11 @@ public class Juego extends JGame {
 
     public void gameStartup() {
         try {
-            nivelManager = new NivelManager(this);
             p38 = new P38(keyboard, pendientesGraficos);
+            nivelactual = new Nivel0(keyboard, pendientesGraficos);
+            nivelactual.start();
+            generadorBonus = new GeneradorBonus(pendientesGraficos, diffSeconds);
+            generadorBonus.start();
             System.out.println("gameStartup");
         } catch (Exception e) {
             System.out.println(e);
@@ -61,9 +68,9 @@ public class Juego extends JGame {
     }
 
     public void gameUpdate(double delta) {
-        nivelManager.update();
+        updatenivel();
         borrarycargar();
-        if ((nivelManager.getNivel() instanceof Nivel0) || (nivelManager.getNivel() instanceof GameOver))
+        if ((nivelactual instanceof Nivel0) || (nivelactual instanceof GameOver))
             return;
         actualizarHora(pause);
         if (keyboard.isKeyPressed(KeyEvent.VK_SPACE) && !flag) {
@@ -73,7 +80,6 @@ public class Juego extends JGame {
             flag = false;
         if (!pause) {
             verificarObjetos();
-            keyEvents = keyboard.getEvents();
             updateGeneral();
         } else {
         }
@@ -81,10 +87,10 @@ public class Juego extends JGame {
 
     public void gameDraw(Graphics2D g) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        if (nivelManager.getNivel().getFondo() != null)
-            nivelManager.getNivel().getFondo().display(g);
+        if (nivelactual.getFondo() != null)
+            nivelactual.getFondo().display(g);
         dibujarObjetosGraficos(g);
-        if ((nivelManager.getNivel() instanceof Nivel0) || (nivelManager.getNivel() instanceof GameOver))
+        if ((nivelactual instanceof Nivel0) || (nivelactual instanceof GameOver))
             return;
         dibujarHUD(g);
     }
@@ -125,7 +131,7 @@ public class Juego extends JGame {
         }
         for (Refuerzo refuerzo : p38.getRefuerzos())
             refuerzo.display(g);
-        if ((nivelManager.getNivel() instanceof Nivel0) || (nivelManager.getNivel() instanceof GameOver))
+        if ((nivelactual instanceof Nivel0) || (nivelactual instanceof GameOver))
             return;
         p38.display(g);
     }
@@ -133,31 +139,42 @@ public class Juego extends JGame {
     private void updateGeneral() {
         hayTsunami = false;
         p38.update();
-        if(p38.getEnergia()<=0) nivelManager.getNivel().setEstado(0);//Gamer Over
+        if (p38.getEnergia() <= 0)
+            nivelactual.setEstado(0);// Gamer Over
         for (ObjetoGrafico objeto : objetosGraficos) {
             objeto.update();
-            if (objeto instanceof AtaqueEspecial) {
-                aplicarAtaque((AtaqueEspecial) objeto);
-            } else {
-                for (Refuerzo refuerzo : p38.getRefuerzos()) {
-                    if (objeto instanceof Enemigo && (intersección(refuerzo, objeto)))
-                        colisionar(refuerzo, (Enemigo) objeto);
-                }
-                if (intersección(objeto, p38))
-                    colisionar(p38, objeto);
-                for (ObjetoGrafico objeto2 : objetosGraficos) {
-                    if ((objeto.getClass() != objeto2.getClass()) && (intersección(objeto, objeto2))) {
-                        colisionar(objeto, objeto2);
-                    }
-                }
-            }
-
+            revisarInstersecciones (objeto);
         }
-        if (!hayTsunami && nivelManager.getNivel().getFondo().movible())
-            nivelManager.getNivel().getFondo().update();
+        if (!hayTsunami && nivelactual.getFondo().movible())
+            nivelactual.getFondo().update();
         for (Explosion explosion : explosiones) {
             explosion.update();
         }
+    }
+
+    private void revisarInstersecciones(ObjetoGrafico objeto) {
+        if ((objeto instanceof AtaqueEspecial)) {
+                aplicarAtaque((AtaqueEspecial) objeto);
+            } else {
+                if (objeto instanceof Enemigo) {
+                    for (Refuerzo refuerzo : p38.getRefuerzos()) {
+                        if ((intersección(refuerzo, objeto)))
+                            colisionar(refuerzo, (Enemigo) objeto);
+                    }
+                }
+                if ((objeto instanceof Hiteable) && intersección(objeto, p38))
+                    colisionar(p38, objeto);
+                else {
+                    if (objeto instanceof Disparo) {
+                        for (ObjetoGrafico objeto2 : objetosGraficos) {
+                            if ((intersección(objeto, objeto2)) && (objeto2 instanceof Hiteable))
+                                colisionar((Disparo) objeto, (Hiteable) objeto2);
+                        }
+                    }
+
+                }
+
+            }
     }
 
     private void aplicarAtaque(AtaqueEspecial ataqueEspecial) {
@@ -242,31 +259,15 @@ public class Juego extends JGame {
                 && (b.getY() > 1000 + tsunami.desplazamiento()));
     }
 
-    public void colisionar(ObjetoGrafico objeto, ObjetoGrafico objeto2) {
-        String nombreClase = objeto.getClass().getSuperclass().getSimpleName();
-        switch (nombreClase) {
-            case "Disparo":
-                colisionar((Disparo) objeto, objeto2);
-                break;
-        }
-    }
-
-    public void colisionar(Disparo disparo, ObjetoGrafico objeto2) {
-        if (objeto2 instanceof Enemigo) {
-            Enemigo1 enemigo;
-            enemigo = (Enemigo1) objeto2;
-            enemigo.recibirDanio(disparo.getDanio());
-        } else if (objeto2 instanceof Bonus) {
-            Bonus bonus;
-            bonus = (Bonus) objeto2;
-            bonus.recibirDisparo();
-            if (bonus.getCount() >= 3) {
+    public void colisionar(Disparo disparo, Hiteable hiteable) {
+        limpiezGraficos.add(disparo);
+        hiteable.recibirDisparo(disparo);
+        if (hiteable instanceof Bonus) {
+            Bonus bonus = (Bonus) hiteable;
+            if ((bonus.getCount() >= 3))
                 pendientesGraficos.add(bonusRandom(bonus.getX(), bonus.getY() - 40));
-            }
+
         }
-        if (!(disparo instanceof DisparoLaser) && (!(objeto2 instanceof Disparo))
-                && (!(objeto2 instanceof AtaqueEspecial)))
-            disparo.setBorrar(true);
     }
 
     public void colisionar(P38 p38, ObjetoGrafico objeto2) {
@@ -286,9 +287,8 @@ public class Juego extends JGame {
     }
 
     public void colisionar(Refuerzo refuerzo, Enemigo enemigo) {
-
         refuerzo.setBorrar(true);
-        enemigo.recibirDanio(1);
+        enemigo.recibirDanio(2);
     }
 
     public Vector<ObjetoGrafico> getPendientesGraficos() {
@@ -327,14 +327,49 @@ public class Juego extends JGame {
         return pause;
     }
 
-    public long[] getSec() {
-        return diffSeconds;
-    }
-
     public void clear() {
         dInit = new Date();
         objetosGraficos.clear();
         pendientesGraficos.clear();
         p38 = new P38(keyboard, pendientesGraficos);
+    }
+
+    private void updatenivel() {
+        if (keyboard.isKeyPressed(KeyEvent.VK_ESCAPE))
+            stop();
+        int estado = nivelactual.getestado();
+        switch (estado) {
+            case 1:
+                break;// caso normal, en ejecución
+            case -1:// cerrar el juego
+                stop();
+                break;
+            case 0:// Game over
+                clear();
+                nivelactual = new GameOver(keyboard, pendientesGraficos);
+                nivelactual.start();
+                break;
+            case 2:// Avanzó de nivel
+                clear();
+                indexNivel++;
+                nivelactual = inicializarNivel(indexNivel);
+                nivelactual.start();
+                break;
+            case 3:// Retomó el nivel
+                clear();
+                nivelactual = inicializarNivel(indexNivel);
+                nivelactual.start();
+                break;
+
+        }
+    }
+
+    private Nivel inicializarNivel(int indexNivel) {
+        Nivel nivel = new Nivel1(pendientesGraficos, diffSeconds);
+        switch (indexNivel) {
+            case 1:
+                break;
+        }
+        return nivel;
     }
 }
