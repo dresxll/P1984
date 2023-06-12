@@ -2,6 +2,7 @@ package juego0.core;
 
 import com.entropyinteractive.*;
 
+import juego0.Jefes.Yamato;
 import juego0.armas.Explosion;
 import juego0.armas.disparos.*;
 import juego0.ataquesEspeciales.AtaqueEspecial;
@@ -25,15 +26,17 @@ public class J1943 extends JGame {
     private long[] diffSeconds = { 0 };
     private long dateDiff, diffMinutes, tiempoPausado = 0, acumPause = 0;
     private Vector<ObjetoGrafico> objetosGraficos = new Vector<>(), pendientesGraficos = new Vector<>(),
-            limpiezGraficos = new Vector<>();;
+            limpiezGraficos = new Vector<>();
     private Vector<Explosion> explosiones = new Vector<>();
+    private ObjetoAuxiliar barra, E, E1, E2, E3;
     private Keyboard keyboard = this.getKeyboard();
     private P38 p38;
     private Nivel nivelactual;
     private GeneradorBonus generadorBonus;
     private int indexNivel = 0;
     private boolean pause = false, flag = false, hayTsunami = false;
-    //private Jugador jugador = new Jugador();
+    // private Jugador jugador = new Jugador();
+    // Yamato yamato = new Yamato();
 
     public static void main(String[] args) {
         J1943 juego = new J1943();
@@ -48,12 +51,17 @@ public class J1943 extends JGame {
 
     public void gameStartup() {
         try {
+
             p38 = new P38(keyboard, pendientesGraficos);
             nivelactual = new Nivel0(keyboard, pendientesGraficos);
             nivelactual.start();
             generadorBonus = new GeneradorBonus(pendientesGraficos, diffSeconds);
             generadorBonus.start();
-            System.out.println("gameStartup");
+            barra = new ObjetoAuxiliar("images/1984/vida/100.png", 40, 760);
+            E = new ObjetoAuxiliar("images/1984/Numeros/E.png", 470, 758);
+            E1 = new ObjetoAuxiliar("images/1984/Numeros/1.png", 500, 760);
+            E2 = new ObjetoAuxiliar("images/1984/Numeros/0.png", 520, 760);
+            E3 = new ObjetoAuxiliar("images/1984/Numeros/0.png", 540, 760);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -77,26 +85,72 @@ public class J1943 extends JGame {
         if (!pause) {
             verificarObjetos();
             updateGeneral();
-        } else {
+        }
+        if (nivelactual.getestado() == 5 && nivelactual.getJefe() != null) {
+            nivelactual.getJefe().update();
         }
     }
 
     public void gameDraw(Graphics2D g) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         if (nivelactual.getFondo() != null)
             nivelactual.getFondo().display(g);
+        if (nivelactual.getestado() == 5 && nivelactual.getJefe() != null) {
+            nivelactual.getJefe().display(g);
+        }
+        if (!(nivelactual instanceof Nivel0) && !(nivelactual instanceof GameOver))
+            dibujarVida(g);
         dibujarObjetosGraficos(g);
         if ((nivelactual instanceof Nivel0) || (nivelactual instanceof GameOver))
             return;
-        dibujarHUD(g);
+
     }
 
-    private void dibujarHUD(Graphics2D g) {
-        g.setColor(Color.white);
-        g.drawString("Tiempo de Juego: " + diffMinutes + ":" + diffSeconds[0], 12, 42);
-        g.drawString("Tecla ESC = Fin del Juego ", 460, 42);
-        g.drawString("Energia: " + p38.getEnergia(), 520, 780);
-        g.setColor(Color.white);
+    private void dibujarVida(Graphics2D g) {
+        int numero = p38.getEnergia();
+        int redondeado = (numero / 10) * 10;
+        switch (redondeado) {
+            case 20:
+                barra.setImagen("images/1984/vida/20.png");
+                break;
+            case 30:
+                barra.setImagen("images/1984/vida/30.png");
+                break;
+            case 40:
+                barra.setImagen("images/1984/vida/40.png");
+                break;
+            case 50:
+                barra.setImagen("images/1984/vida/50.png");
+                break;
+            case 60:
+                barra.setImagen("images/1984/vida/60.png");
+                break;
+            case 70:
+                barra.setImagen("images/1984/vida/70.png");
+                break;
+            case 80:
+                barra.setImagen("images/1984/vida/80.png");
+                break;
+            case 90:
+                barra.setImagen("images/1984/vida/90.png");
+                break;
+            case 100:
+                barra.setImagen("images/1984/vida/100.png");
+                break;
+        }
+        if (redondeado >= 20)
+            barra.display(g);
+        E.display(g);
+        int digito1 = numero / 100; // El primer dígito
+        int digito2 = (numero % 100) / 10; // El segundo dígito
+        int digito3 = numero % 10; // El tercer dígito
+        E1.setImagen("images/1984/Numeros/" + digito1 + ".png");
+        E1.display(g);
+        E2.setImagen("images/1984/Numeros/" + digito2 + ".png");
+        E2.display(g);
+        E3.setImagen("images/1984/Numeros/" + digito3 + ".png");
+        E3.display(g);
     }
 
     private void actualizarHora(boolean pause) {
@@ -356,7 +410,35 @@ public class J1943 extends JGame {
                 nivelactual = inicializarNivel(indexNivel);
                 nivelactual.start();
                 break;
-
+            case 4:// Pasó a la segunda fase
+                clear();
+                p38.aproximar();
+                nivelactual.getFondo().setImagen("images/1984/fondo2.png");
+                nivelactual.getFondo().setY(-nivelactual.getFondo().getHeight() + 810);
+                nivelactual.setEstado(5);
+                break;
+            case 5:// Segunda fase cargada
+                if (nivelactual.getJefe() != null) {
+                    for (Torreta torreta : nivelactual.getJefe().getTorretas()) {
+                        for (ObjetoGrafico objetoGrafico : objetosGraficos) {
+                            if ((objetoGrafico instanceof Disparo) && (intersección(torreta, objetoGrafico))) {
+                                colisionar((Disparo) objetoGrafico, torreta);
+                                explosiones.add(new Explosion(torreta.getX(), torreta.getY()));
+                            } else if (objetoGrafico instanceof Tsunami) {
+                                if (intersección((Tsunami) objetoGrafico, torreta))
+                                torreta.recibirDanio(1);
+                            }
+                        }
+                    }
+                }
+                break;
+            case 6:// Se acabo el tiempo de la misión
+                if (nivelactual.getJefe().getDanioAcumulado() > 0.7) {
+                    // fin del juego
+                    stop();
+                } else
+                    nivelactual.setEstado(0);
+                break;
         }
     }
 

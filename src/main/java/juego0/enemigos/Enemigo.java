@@ -6,7 +6,7 @@ import juego0.core.ObjetoGrafico;
 
 public abstract class Enemigo extends ObjetoGrafico implements Hiteable {
 
-    protected int energia;
+    protected int energia =1 ;
     protected boolean chico = false;
     protected boolean buque = false;
 

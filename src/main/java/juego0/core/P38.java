@@ -16,6 +16,7 @@ import juego0.ataquesEspeciales.*;
 import juego0.bonus.Refuerzo;
 
 public class P38 extends ObjetoGrafico {
+    private boolean aproximado = false;
     private int energia = 100;
     private Keyboard keyboard;
     private int shell = 0;
@@ -25,7 +26,6 @@ public class P38 extends ObjetoGrafico {
     private BufferedImage p38Invulnerable = null;
     private Vector<ObjetoGrafico> pendientesGraficos;
     private Vector<Refuerzo> refuerzos = new Vector<>();
-    private AtaqueEspecial ataqueEspecial = new Relampago();
 
     public P38(Keyboard keyboard, Vector<ObjetoGrafico> pendientesGraficos) {
         super("images/1984/p38.png", 275, 700);
@@ -45,7 +45,8 @@ public class P38 extends ObjetoGrafico {
     public void update() {
         if (keyboard.isKeyPressed(KeyEvent.VK_Z) && energia > 20) {
             if (!interrumpirataque) {
-                pendientesGraficos.add(ataqueEspecial);
+                if (!aproximado)pendientesGraficos.add(new Relampago());      
+                    else pendientesGraficos.add(new Tsunami());
                 interrumpirataque = true;
                 energia-=20;
             }
@@ -111,7 +112,8 @@ public class P38 extends ObjetoGrafico {
     public void recibirDanio(int danio) {
         dDanio = new Date();
         energia -= danio;
-        if (energia<0) energia = 0;
+        if (energia < 0)
+            energia = 0;
     }
 
     public void recargarEnergia() {
@@ -182,8 +184,8 @@ public class P38 extends ObjetoGrafico {
         return refuerzos;
 
     }
-
-    public void setAtaque(AtaqueEspecial ataqueEspecial){
-        this.ataqueEspecial = ataqueEspecial;
+    public void aproximar(){
+        aproximado = true;
     }
+
 }

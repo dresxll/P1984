@@ -8,11 +8,12 @@ import juego0.bonus.powerUps.*;
 import juego0.core.ObjetoGrafico;
 
 public class GeneradorBonus extends Thread {
+    private final int T = 16;
     private Random random = new Random();
     private Vector<ObjetoGrafico> pendientesGraficos;
     private long[] diffSeconds = { 0 };
     private long diffSeconds2;
-    private int numero = random.nextInt(5) + 1;
+    private int numero = random.nextInt(T) + 1;
 
     public GeneradorBonus(Vector<ObjetoGrafico> pendientesGraficos, long[] diffSeconds) {
         this.pendientesGraficos = pendientesGraficos;
@@ -22,10 +23,10 @@ public class GeneradorBonus extends Thread {
     public void run() {
         while (true) {
             diffSeconds2 = diffSeconds[0];
-            while (diffSeconds2 > 5){diffSeconds2 -= 5;}
+            while (diffSeconds2 > T){diffSeconds2 -= T;}
             if (diffSeconds2 == numero) {
                 pendientesGraficos.add(bonusRandom());
-                numero = random.nextInt(5) + 1;
+                numero = random.nextInt(T) + 1;
             }
         }
     }

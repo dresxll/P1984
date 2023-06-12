@@ -33,6 +33,9 @@ public abstract class ObjetoGrafico {
 		}
 
 	}
+	public BufferedImage getImagen() {
+		return imagen;
+	}
     public int getWidth() {
 		return imagen.getWidth();
 	}

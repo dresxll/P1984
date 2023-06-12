@@ -8,7 +8,7 @@ public class Fondo extends ObjetoGrafico {
 
 	@Override
 	public void update() {
-		positionY+=1;
+		positionY+=0.3;
 	}
 	public boolean movible(){
 		return mover;
