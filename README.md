@@ -1,5 +1,9 @@
 # P1984
 
+## Version 1.4
+
+Sacamos la clase LevelManager y la implementamos en el Bucle
+
 ## Version 1.3
 
 Tenemos casi todo lo de los ataques especiales, falta implementar con los buques

@@ -20,32 +20,28 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class Juego extends JGame {
-    private Date dInit = new Date(), dAhora = new Date();
-    private Date dPausado;
-    private long dateDiff;
+public class J1943 extends JGame {
+    private Date dInit = new Date(), dAhora = new Date(), dPausado;
     private long[] diffSeconds = { 0 };
-    private long diffMinutes;
-    private long tiempoPausado = 0, acumPause = 0;
-    private Vector<ObjetoGrafico> objetosGraficos = new Vector<>();
+    private long dateDiff, diffMinutes, tiempoPausado = 0, acumPause = 0;
+    private Vector<ObjetoGrafico> objetosGraficos = new Vector<>(), pendientesGraficos = new Vector<>(),
+            limpiezGraficos = new Vector<>();;
     private Vector<Explosion> explosiones = new Vector<>();
-    private Vector<ObjetoGrafico> pendientesGraficos = new Vector<>();
-    private Vector<ObjetoGrafico> limpiezGraficos = new Vector<>();
     private Keyboard keyboard = this.getKeyboard();
     private P38 p38;
     private Nivel nivelactual;
     private GeneradorBonus generadorBonus;
     private int indexNivel = 0;
-
     private boolean pause = false, flag = false, hayTsunami = false;
+    //private Jugador jugador = new Jugador();
 
     public static void main(String[] args) {
-        Juego juego = new Juego();
+        J1943 juego = new J1943();
         juego.run(1.0 / 60.0);
         System.exit(0);
     }
 
-    public Juego() {
+    public J1943() {
         super("App", 600, 800);
         System.out.println(appProperties.stringPropertyNames());
     }
@@ -143,7 +139,7 @@ public class Juego extends JGame {
             nivelactual.setEstado(0);// Gamer Over
         for (ObjetoGrafico objeto : objetosGraficos) {
             objeto.update();
-            revisarInstersecciones (objeto);
+            revisarInstersecciones(objeto);
         }
         if (!hayTsunami && nivelactual.getFondo().movible())
             nivelactual.getFondo().update();
@@ -154,27 +150,27 @@ public class Juego extends JGame {
 
     private void revisarInstersecciones(ObjetoGrafico objeto) {
         if ((objeto instanceof AtaqueEspecial)) {
-                aplicarAtaque((AtaqueEspecial) objeto);
-            } else {
-                if (objeto instanceof Enemigo) {
-                    for (Refuerzo refuerzo : p38.getRefuerzos()) {
-                        if ((intersección(refuerzo, objeto)))
-                            colisionar(refuerzo, (Enemigo) objeto);
-                    }
+            aplicarAtaque((AtaqueEspecial) objeto);
+        } else {
+            if (objeto instanceof Enemigo) {
+                for (Refuerzo refuerzo : p38.getRefuerzos()) {
+                    if ((intersección(refuerzo, objeto)))
+                        colisionar(refuerzo, (Enemigo) objeto);
                 }
-                if ((objeto instanceof Hiteable) && intersección(objeto, p38))
-                    colisionar(p38, objeto);
-                else {
-                    if (objeto instanceof Disparo) {
-                        for (ObjetoGrafico objeto2 : objetosGraficos) {
-                            if ((intersección(objeto, objeto2)) && (objeto2 instanceof Hiteable))
-                                colisionar((Disparo) objeto, (Hiteable) objeto2);
-                        }
+            }
+            if ((objeto instanceof Hiteable) && intersección(objeto, p38))
+                colisionar(p38, objeto);
+            else {
+                if (objeto instanceof Disparo) {
+                    for (ObjetoGrafico objeto2 : objetosGraficos) {
+                        if ((intersección(objeto, objeto2)) && (objeto2 instanceof Hiteable))
+                            colisionar((Disparo) objeto, (Hiteable) objeto2);
                     }
-
                 }
 
             }
+
+        }
     }
 
     private void aplicarAtaque(AtaqueEspecial ataqueEspecial) {
