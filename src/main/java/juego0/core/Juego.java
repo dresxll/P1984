@@ -10,6 +10,8 @@ import juego0.ataquesEspeciales.Tsunami;
 import juego0.bonus.*;
 import juego0.bonus.powerUps.*;
 import juego0.enemigos.*;
+import juego0.niveles.GameOver;
+import juego0.niveles.Nivel0;
 import juego0.niveles.NivelManager;
 
 import java.awt.*;
@@ -59,6 +61,10 @@ public class Juego extends JGame {
     }
 
     public void gameUpdate(double delta) {
+        nivelManager.update();
+        borrarycargar();
+        if ((nivelManager.getNivel() instanceof Nivel0) || (nivelManager.getNivel() instanceof GameOver))
+            return;
         actualizarHora(pause);
         if (keyboard.isKeyPressed(KeyEvent.VK_SPACE) && !flag) {
             pause = !pause;
@@ -67,9 +73,7 @@ public class Juego extends JGame {
             flag = false;
         if (!pause) {
             verificarObjetos();
-            borrarycargar();
             keyEvents = keyboard.getEvents();
-            verificarCierre();
             updateGeneral();
         } else {
         }
@@ -77,19 +81,12 @@ public class Juego extends JGame {
 
     public void gameDraw(Graphics2D g) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        nivelManager.getNivel().getFondo().display(g);
+        if (nivelManager.getNivel().getFondo() != null)
+            nivelManager.getNivel().getFondo().display(g);
         dibujarObjetosGraficos(g);
+        if ((nivelManager.getNivel() instanceof Nivel0) || (nivelManager.getNivel() instanceof GameOver))
+            return;
         dibujarHUD(g);
-    }
-
-    private void verificarCierre() {
-        for (KeyEvent event : keyEvents) {
-            if ((event.getID() == KeyEvent.KEY_PRESSED) &&
-                    (event.getKeyCode() == KeyEvent.VK_ESCAPE)) {
-                stop();
-            }
-        }
-
     }
 
     private void dibujarHUD(Graphics2D g) {
@@ -128,12 +125,15 @@ public class Juego extends JGame {
         }
         for (Refuerzo refuerzo : p38.getRefuerzos())
             refuerzo.display(g);
+        if ((nivelManager.getNivel() instanceof Nivel0) || (nivelManager.getNivel() instanceof GameOver))
+            return;
         p38.display(g);
     }
 
     private void updateGeneral() {
         hayTsunami = false;
         p38.update();
+        if(p38.getEnergia()<=0) nivelManager.getNivel().setEstado(0);//Gamer Over
         for (ObjetoGrafico objeto : objetosGraficos) {
             objeto.update();
             if (objeto instanceof AtaqueEspecial) {
@@ -153,7 +153,7 @@ public class Juego extends JGame {
             }
 
         }
-        if (!hayTsunami)
+        if (!hayTsunami && nivelManager.getNivel().getFondo().movible())
             nivelManager.getNivel().getFondo().update();
         for (Explosion explosion : explosiones) {
             explosion.update();
@@ -264,7 +264,8 @@ public class Juego extends JGame {
                 pendientesGraficos.add(bonusRandom(bonus.getX(), bonus.getY() - 40));
             }
         }
-        if (!(disparo instanceof DisparoLaser) && (!(objeto2 instanceof Disparo)) && (!(objeto2 instanceof AtaqueEspecial)))
+        if (!(disparo instanceof DisparoLaser) && (!(objeto2 instanceof Disparo))
+                && (!(objeto2 instanceof AtaqueEspecial)))
             disparo.setBorrar(true);
     }
 
@@ -328,5 +329,12 @@ public class Juego extends JGame {
 
     public long[] getSec() {
         return diffSeconds;
+    }
+
+    public void clear() {
+        dInit = new Date();
+        objetosGraficos.clear();
+        pendientesGraficos.clear();
+        p38 = new P38(keyboard, pendientesGraficos);
     }
 }

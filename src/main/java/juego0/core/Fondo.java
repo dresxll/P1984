@@ -1,6 +1,7 @@
 package juego0.core;
 
 public class Fondo extends ObjetoGrafico {
+	private boolean mover = true;
 	public Fondo(String filename) {
 		super(filename, 0, 0);
 	}
@@ -8,6 +9,12 @@ public class Fondo extends ObjetoGrafico {
 	@Override
 	public void update() {
 		positionY+=1;
+	}
+	public boolean movible(){
+		return mover;
+	}
+	public void setFijo() {
+		mover=false;
 	}
 
 }

@@ -37,6 +37,6 @@ public class Nivel1 extends Nivel {
         pendientesGraficos.add(new Enemigo1(pendientesGraficos, 450, -60));
         pendientesGraficos.add(new Enemigo1(pendientesGraficos, 450, -140));
         pendientesGraficos.add(new Enemigo1(pendientesGraficos, 450, -220));
-
+        
     }
 }
