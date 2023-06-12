@@ -1,12 +1,23 @@
 package juego0.armas;
 
+
+import juego0.armas.disparos.DisparoEscopeta;
+
 public class Escopeta extends Arma {
-    public Escopeta() {
-        //rutaImagen = "images/1984/bala_simple.png";
-    }
+    int danio = 2;
+    @Override
     public void disparar(double x, double y) {
-      //  Disparo disparo = new Disparo(rutaImagen,x,y,0,-25,550);
-      //  Bucle.ObjetoGraficos.add(disparo);
+        pendientesGraficos.add(new DisparoEscopeta(danio,x-10, y+60, 0));
+        pendientesGraficos.add(new DisparoEscopeta(danio,x-10, y+60, -6));
+        pendientesGraficos.add(new DisparoEscopeta(danio,x-10, y+60, -20));
+        pendientesGraficos.add(new DisparoEscopeta(danio,x+10, y+60, 0));
+        pendientesGraficos.add(new DisparoEscopeta(danio,x+10, y+60, +6));
+        pendientesGraficos.add(new DisparoEscopeta(danio,x+10, y+60, +20));
     }
+    @Override
+    public void mejorar() {
+        this.danio=4;
+    }
+
+
 }
- 

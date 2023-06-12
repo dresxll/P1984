@@ -1,11 +1,18 @@
 package juego0.armas;
 
-public class Ametralladora {
-    public Ametralladora() {
-        //rutaImagen = "images/1984/bala_simple.png";
-    }
+import juego0.armas.disparos.DisaparoAmetralladora;
+public class Ametralladora extends Arma {
+   int danio = 1;
+    @Override
     public void disparar(double x, double y) {
-      //  Disparo disparo = new Disparo(rutaImagen,x,y,0,-25,550);
-      //  Bucle.ObjetoGraficos.add(disparo);
+        pendientesGraficos.add(new DisaparoAmetralladora(danio,x+12, y+60, 0));
+        pendientesGraficos.add(new DisaparoAmetralladora(danio,x-8, y+60, -7));
+        pendientesGraficos.add(new DisaparoAmetralladora(danio,x+32, y+60, 7));
     }
+    @Override
+    public void mejorar() {
+        this.danio=2;
+    }
+
+
 }

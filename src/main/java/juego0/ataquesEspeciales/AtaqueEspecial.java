@@ -2,14 +2,16 @@ package juego0.ataquesEspeciales;
 
 import juego0.core.ObjetoGrafico;
 
-public class AtaqueEspecial extends ObjetoGrafico {
-
-    public AtaqueEspecial(String filename) {
-        super(filename);
+public abstract class AtaqueEspecial extends ObjetoGrafico {
+    protected int paso=0;
+    protected boolean aplicado = false;
+    public AtaqueEspecial(String filename, double positionX, double positionY) {
+        super(filename, positionX, positionY);
     }
-
-    @Override
-    public void update() {
+    public Boolean getAplicado(){
+        return aplicado;
     }
-
+    public void setAplicado() {
+        aplicado = true;
+    }
 }

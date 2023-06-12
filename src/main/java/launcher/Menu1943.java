@@ -13,7 +13,7 @@ import java.io.IOException;
 import javax.swing.*;
 
 public class Menu1943 extends JPanel implements ActionListener {
-    static private ArrayList<JComboBox<String>> ComboBox;
+    static private ArrayList<JComboBox<String>> comboBox;
     JButton button1, button2;
 
     public Menu1943() {
@@ -30,7 +30,7 @@ public class Menu1943 extends JPanel implements ActionListener {
         button2.addActionListener(this);
         button2.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        ComboBox = new ArrayList<JComboBox<String>>();
+        comboBox = new ArrayList<JComboBox<String>>();
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         GridBagConstraints d = new GridBagConstraints();
@@ -54,35 +54,35 @@ public class Menu1943 extends JPanel implements ActionListener {
                 this.add(aux, e);
             }
             if (i < 4) {
-                JLabel aux = new JLabel(Opciones.label[i]);
+                JLabel aux = new JLabel(label[i]);
                 aux.setFont(new Font("Arial", Font.PLAIN, 12));
                 aux.setForeground(new Color(200, 200, 200));
                 c.gridx = 0;
                 d.gridx = 1;
                 this.add(aux, c);
-                ComboBox.add(new JComboBox<String>(Opciones.opcion[i]));
-                ComboBox.get(i).setFont(new Font("Arial", Font.PLAIN, 12));
-                this.add(ComboBox.get(i), d);
+                comboBox.add(new JComboBox<String>(opcion[i]));
+                comboBox.get(i).setFont(new Font("Arial", Font.PLAIN, 12));
+                this.add(comboBox.get(i), d);
             } else if (i >= 4 && i < 14) {
                 c.gridx = 1;
                 d.gridx = 2;
-                JLabel aux = new JLabel(Opciones.label[i]);
+                JLabel aux = new JLabel(label[i]);
                 aux.setFont(new Font("Arial", Font.PLAIN, 12));
                 aux.setForeground(new Color(200, 200, 200));
                 this.add(aux, c);
-                ComboBox.add(new JComboBox<String>(Opciones.opcion[4]));
-                ComboBox.get(i).setFont(new Font("Arial", Font.PLAIN, 12));
-                this.add(ComboBox.get(i), d);
+                comboBox.add(new JComboBox<String>(opcion[4]));
+                comboBox.get(i).setFont(new Font("Arial", Font.PLAIN, 12));
+                this.add(comboBox.get(i), d);
             } else {
                 c.gridx = 0;
                 d.gridx = 1;
-                JLabel aux = new JLabel(Opciones.label[i]);
+                JLabel aux = new JLabel(label[i]);
                 aux.setFont(new Font("Arial", Font.PLAIN, 12));
                 aux.setForeground(new Color(200, 200, 200));
                 this.add(aux, c);
-                ComboBox.add(new JComboBox<String>(Opciones.opcion[5]));
-                ComboBox.get(i).setFont(new Font("Arial", Font.PLAIN, 12));
-                this.add(ComboBox.get(i), d);
+                comboBox.add(new JComboBox<String>(opcion[5]));
+                comboBox.get(i).setFont(new Font("Arial", Font.PLAIN, 12));
+                this.add(comboBox.get(i), d);
             }
         }
 
@@ -93,7 +93,7 @@ public class Menu1943 extends JPanel implements ActionListener {
         this.add(button2, d);
         JSONObject config = loadConfig();
         for (int i = 0; i < 16; i++) {
-            ComboBox.get(i).setSelectedItem(config.get(Opciones.label[i]));
+            comboBox.get(i).setSelectedItem(config.get(label[i]));
         }
         
     }
@@ -101,17 +101,17 @@ public class Menu1943 extends JPanel implements ActionListener {
     void setDefault() {
         for (int i = 0; i < 16; i++) {
             if (i >= 4 && i < 14) {
-                ComboBox.get(i).setSelectedIndex(i - 4);
+                comboBox.get(i).setSelectedIndex(i - 4);
             } else {
-                ComboBox.get(i).setSelectedIndex(0);
+                comboBox.get(i).setSelectedIndex(0);
             }
         }
     }
-
+    
     private static void saveConfig() {
         JSONObject configJson = new JSONObject();
         for (int i = 0; i < 16; i++) {
-            configJson.put(Opciones.label[i], ComboBox.get(i).getSelectedItem());
+       //     configJson.put(label[i], comboBox.get(i).getSelectedItem());
         }
         try (FileWriter fileWriter = new FileWriter("src/main/resources/config.json")) {
             fileWriter.write(configJson.toJSONString());
@@ -119,6 +119,7 @@ public class Menu1943 extends JPanel implements ActionListener {
             e.printStackTrace();
         }
     }
+    
 
     private static JSONObject loadConfig() { 
         JSONParser parser = new JSONParser();
@@ -140,4 +141,33 @@ public class Menu1943 extends JPanel implements ActionListener {
             this.setDefault();
         }
     }
+
+    public static String[][] opcion = { { "Ventana", "Pantalla completa" },
+            { "Activado", "Desactivado" },
+            { "Activado", "Desactivado" },
+            { "Activado", "Desactivado" },
+            { "Activar/Desactivar efectos de sonido", "Activar/Desactivar música de fondo", "Pausar,Reanudar juego",
+                    "Izquierda", "Derecha", "Arriba", "Abajo", "Disparo", "Ataque Especial", "Inicia el juego" },
+            {"Original"}
+    };
+
+    public static String[] label = {
+            "Modo de pantalla",
+            "Sonido General",
+            "Efectos de sonido",
+            "Musica de fondo",
+            "Q",
+            "W",
+            "Barra espaciadora",
+            "←",
+            "→",
+            "↑",
+            "↓",
+            "X",
+            "Z",
+            "Enter",
+            "Selección de pista musical",
+            "Selección de personaje",
+            "Modo de pantalla",
+    };
 }

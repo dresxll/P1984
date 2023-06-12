@@ -1,15 +1,29 @@
 package juego0.armas;
 
-import juego0.core.Bucle;
-import juego0.core.Disparo;
+import juego0.armas.disparos.DisparoBase;
 
 public class ArmaBase extends Arma {
-    public ArmaBase() {
-        ImagenDisparo = "images/1984/bala_simple.png";
-    }
+
+    @Override
     public void disparar(double x, double y) {
-        Disparo disparo = new Disparo(ImagenDisparo,x,y,0,-25,550);
-        Bucle.ObjetoGraficos.add(disparo);
+        switch(rafaga){
+            case 1:
+            pendientesGraficos.add(new DisparoBase(x, y+60));
+            break;
+            case 2:
+            pendientesGraficos.add(new DisparoBase(x, y+60));
+            pendientesGraficos.add(new DisparoBase(x, y));
+            break;
+            case 3:
+            pendientesGraficos.add(new DisparoBase(x, y+60));
+            pendientesGraficos.add(new DisparoBase(x, y));
+            pendientesGraficos.add(new DisparoBase(x, y-60));
+            break;
+        }
+    }
+
+    @Override
+    public void mejorar() {
+        throw new UnsupportedOperationException("Unimplemented method 'mejorar'");
     }
 }
- 

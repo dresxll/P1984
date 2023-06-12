@@ -1,11 +1,22 @@
 package juego0.armas;
 
-public class Laser {
+
+import juego0.armas.disparos.DisparoLaser;
+
+public class Laser extends Arma {
+    int danio = 3;
     public Laser() {
-        //rutaImagen = "images/1984/bala_simple.png";
     }
+
+    @Override
     public void disparar(double x, double y) {
-      //  Disparo disparo = new Disparo(rutaImagen,x,y,0,-25,550);
-      //  Bucle.ObjetoGraficos.add(disparo);
+        pendientesGraficos.add(new DisparoLaser(danio,x, y));
     }
+
+    @Override
+    public void mejorar() {
+        this.danio=6;
+    }
+
+
 }
